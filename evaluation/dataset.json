@@ -1,0 +1,30 @@
+{
+  "version": "or-v0.1-eval-1",
+  "description": "Deterministic product-level evaluation set for Or v0.1. Inputs are synthetic and contain no personal data.",
+  "cases": [
+    { "id": "F001", "suite": "fast", "input": { "optionA": "Coffee", "optionB": "Matcha" }, "expected": { "mode": "fast", "category": "food", "reversible": true, "questionCount": 0 } },
+    { "id": "F002", "suite": "fast", "input": { "optionA": "Black shirt", "optionB": "White shirt" }, "expected": { "mode": "fast", "category": "daily", "reversible": true, "questionCount": 0 } },
+    { "id": "F003", "suite": "fast", "input": { "optionA": "Sushi", "optionB": "Ramen" }, "expected": { "mode": "fast", "category": "food", "reversible": true, "questionCount": 0 } },
+    { "id": "F004", "suite": "fast", "input": { "optionA": "Buy the headphones", "optionB": "Keep using the old pair" }, "expected": { "mode": "fast", "category": "purchase", "reversible": true, "questionCount": 0 } },
+    { "id": "F005", "suite": "fast", "input": { "optionA": "Movie A", "optionB": "Movie B" }, "expected": { "mode": "fast", "category": "daily", "reversible": true, "questionCount": 0 } },
+
+    { "id": "T001", "suite": "think", "input": { "optionA": "Stay home tonight", "optionB": "Go out with friends" }, "answers": { "desire": "B", "regret": "B" }, "expected": { "mode": "think", "category": "social", "reversible": true, "questionCount": 2, "chosenIndex": 1 } },
+    { "id": "T002", "suite": "think", "input": { "optionA": "Write my thesis tonight", "optionB": "Rest without guilt" }, "answers": { "desire": "B", "regret": "A" }, "expected": { "mode": "think", "category": "study", "reversible": true, "questionCount": 2 } },
+    { "id": "T003", "suite": "think", "input": { "optionA": "Go to the gym", "optionB": "Rest because I am tired", "context": "I feel guilty either way" }, "answers": { "desire": "B", "regret": "neutral" }, "expected": { "mode": "think", "category": "wellbeing", "reversible": true, "questionCount": 2 } },
+    { "id": "T004", "suite": "think", "input": { "optionA": "Finish the deadline work", "optionB": "Sleep early" }, "answers": { "desire": "B", "regret": "A" }, "expected": { "mode": "think", "category": "work", "reversible": true, "questionCount": 2 } },
+    { "id": "T005", "suite": "think", "input": { "optionA": "Go on the date", "optionB": "Reschedule" }, "answers": { "desire": "A", "regret": "A" }, "expected": { "mode": "think", "category": "social", "reversible": true, "questionCount": 2, "chosenIndex": 0 } },
+
+    { "id": "D001", "suite": "deep", "input": { "optionA": "Accept Offer A", "optionB": "Accept Offer B" }, "answers": { "desire": "A", "regret": "neutral", "future": "B", "recovery": "A" }, "expected": { "mode": "deep", "category": "career", "reversible": false, "questionCount": 4 } },
+    { "id": "D002", "suite": "deep", "input": { "optionA": "Move city for the job", "optionB": "Stay near family" }, "answers": { "desire": "B", "regret": "A", "future": "A", "recovery": "B" }, "expected": { "mode": "deep", "category": "career", "reversible": false, "questionCount": 4 } },
+
+    { "id": "B001", "suite": "boundary", "input": { "optionA": "咖啡", "optionB": "抹茶" }, "expected": { "mode": "fast", "category": "food", "reversible": true, "questionCount": 0 } },
+    { "id": "B002", "suite": "boundary", "input": { "optionA": "Accept a job offer", "optionB": "Decline it", "preferredMode": "fast" }, "expected": { "mode": "fast", "category": "career", "reversible": false, "questionCount": 0 } },
+    { "id": "B003", "suite": "boundary", "kind": "validation", "input": { "optionA": "Coffee", "optionB": "Coffee" }, "expected": { "validationError": "These two options look the same." } },
+    { "id": "B004", "suite": "boundary", "kind": "validation", "input": { "optionA": "Coffee", "optionB": "" }, "expected": { "validationError": "Two options are required." } },
+
+    { "id": "M001", "suite": "memory", "input": { "optionA": "Stay home tonight", "optionB": "Go out with friends" }, "historySeeds": [{ "finalChoiceIndex": 1, "rating": "loved" }], "expected": { "mode": "think", "chosenIndex": 1, "historyUsed": true } },
+    { "id": "M002", "suite": "memory", "input": { "optionA": "Stay home tonight", "optionB": "Go out with friends" }, "historySeeds": [{ "finalChoiceIndex": 1, "rating": "regretted" }, { "finalChoiceIndex": 1, "rating": "regretted" }, { "finalChoiceIndex": 1, "rating": "regretted" }], "expected": { "mode": "think", "chosenIndex": 0, "historyUsed": true } },
+    { "id": "M003", "suite": "memory", "input": { "optionA": "Stay home tonight", "optionB": "Go out with friends" }, "historySeeds": [{ "finalChoiceIndex": 0, "rating": "loved" }, { "finalChoiceIndex": 0, "rating": "loved" }], "expected": { "mode": "think", "chosenIndex": 0, "historyUsed": true } },
+    { "id": "M004", "suite": "memory", "input": { "optionA": "Write my thesis tonight", "optionB": "Rest without guilt" }, "historySeeds": [{ "finalChoiceIndex": 1, "rating": "loved", "optionA": "Study tonight", "optionB": "Rest tonight" }], "expected": { "mode": "think", "historyUsed": true } }
+  ]
+}

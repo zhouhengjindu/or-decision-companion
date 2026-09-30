@@ -1,0 +1,5 @@
+# Copy to .dev.vars and fill using your own OAuth app and random 32+ byte secret.
+BETTER_AUTH_SECRET=replace-with-a-random-secret-at-least-32-characters
+BETTER_AUTH_URL=http://localhost:3000
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=

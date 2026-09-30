@@ -1,0 +1,2153 @@
+{
+  "datasetVersion": "or-v0.1-eval-1",
+  "generatedAt": "2026-08-23T20:14:57.765Z",
+  "runtimeMs": 45,
+  "summary": {
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "passRate": 100,
+    "suites": [
+      {
+        "suite": "fast",
+        "total": 5,
+        "passed": 5
+      },
+      {
+        "suite": "think",
+        "total": 5,
+        "passed": 5
+      },
+      {
+        "suite": "deep",
+        "total": 2,
+        "passed": 2
+      },
+      {
+        "suite": "boundary",
+        "total": 4,
+        "passed": 4
+      },
+      {
+        "suite": "memory",
+        "total": 4,
+        "passed": 4
+      }
+    ]
+  },
+  "uiEvidence": {
+    "startTime": "2026-08-23T20:11:24.452Z",
+    "duration": 87683.74100000001,
+    "expected": 21,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "results": [
+    {
+      "id": "F001",
+      "suite": "fast",
+      "input": {
+        "optionA": "Coffee",
+        "optionB": "Matcha"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "food",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "food",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Coffee",
+          "confidence": 72,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing Coffee means letting go of Matcha for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "food",
+          "actual": "food",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Coffee",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 72,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing Coffee means letting go of Matcha for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "F002",
+      "suite": "fast",
+      "input": {
+        "optionA": "Black shirt",
+        "optionB": "White shirt"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "daily",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "daily",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Black shirt",
+          "confidence": 73,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing Black shirt means letting go of White shirt for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "daily",
+          "actual": "daily",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Black shirt",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing Black shirt means letting go of White shirt for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "F003",
+      "suite": "fast",
+      "input": {
+        "optionA": "Sushi",
+        "optionB": "Ramen"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "food",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "food",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Sushi",
+          "confidence": 73,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing Sushi means letting go of Ramen for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "food",
+          "actual": "food",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Sushi",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing Sushi means letting go of Ramen for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "F004",
+      "suite": "fast",
+      "input": {
+        "optionA": "Buy the headphones",
+        "optionB": "Keep using the old pair"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "purchase",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "purchase",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Keep using the old pair",
+          "confidence": 73,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing Keep using the old pair means letting go of Buy the headphones for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "purchase",
+          "actual": "purchase",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Keep using the old pair",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing Keep using the old pair means letting go of Buy the headphones for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "F005",
+      "suite": "fast",
+      "input": {
+        "optionA": "Movie A",
+        "optionB": "Movie B"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "daily",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "daily",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Movie A",
+          "confidence": 74,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing Movie A means letting go of Movie B for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "daily",
+          "actual": "daily",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Movie A",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 74,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing Movie A means letting go of Movie B for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "T001",
+      "suite": "think",
+      "input": {
+        "optionA": "Stay home tonight",
+        "optionB": "Go out with friends"
+      },
+      "answers": {
+        "desire": "B",
+        "regret": "B"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "think",
+        "category": "social",
+        "reversible": true,
+        "questionCount": 2,
+        "chosenIndex": 1
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "social",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Go out with friends",
+          "confidence": 89,
+          "reason": "The stronger regret risk is the missed experience. Unfinished low-priority work is usually easier to recover than a moment that passes.",
+          "tradeoff": "Choosing Go out with friends means letting go of Stay home tonight for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "social",
+          "actual": "social",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 2,
+          "actual": 2,
+          "pass": true
+        },
+        {
+          "criterion": "chosenIndex",
+          "expected": 1,
+          "actual": 1,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Go out with friends",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 89,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "The stronger regret risk is the missed experience. Unfinished low-priority work is usually easier to recover than a moment that passes.",
+            "Choosing Go out with friends means letting go of Stay home tonight for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "T002",
+      "suite": "think",
+      "input": {
+        "optionA": "Write my thesis tonight",
+        "optionB": "Rest without guilt"
+      },
+      "answers": {
+        "desire": "B",
+        "regret": "A"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "think",
+        "category": "study",
+        "reversible": true,
+        "questionCount": 2
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "study",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Write my thesis tonight",
+                "value": "A"
+              },
+              {
+                "label": "Rest without guilt",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Write my thesis tonight",
+                "value": "A"
+              },
+              {
+                "label": "Rest without guilt",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Rest without guilt",
+          "confidence": 68,
+          "reason": "This gives the next few hours a cleaner shape and reduces the mental cost of carrying an unfinished choice.",
+          "tradeoff": "Choosing Rest without guilt means letting go of Write my thesis tonight for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "study",
+          "actual": "study",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 2,
+          "actual": 2,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Rest without guilt",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 68,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "This gives the next few hours a cleaner shape and reduces the mental cost of carrying an unfinished choice.",
+            "Choosing Rest without guilt means letting go of Write my thesis tonight for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "T003",
+      "suite": "think",
+      "input": {
+        "optionA": "Go to the gym",
+        "optionB": "Rest because I am tired",
+        "context": "I feel guilty either way"
+      },
+      "answers": {
+        "desire": "B",
+        "regret": "neutral"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "think",
+        "category": "wellbeing",
+        "reversible": true,
+        "questionCount": 2
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "wellbeing",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Go to the gym",
+                "value": "A"
+              },
+              {
+                "label": "Rest because I am tired",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Go to the gym",
+                "value": "A"
+              },
+              {
+                "label": "Rest because I am tired",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Rest because I am tired",
+          "confidence": 73,
+          "reason": "Your answers lean this way, and there is not enough benefit in collecting more information before acting.",
+          "tradeoff": "Choosing Rest because I am tired means letting go of Go to the gym for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "wellbeing",
+          "actual": "wellbeing",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 2,
+          "actual": 2,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Rest because I am tired",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Your answers lean this way, and there is not enough benefit in collecting more information before acting.",
+            "Choosing Rest because I am tired means letting go of Go to the gym for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "T004",
+      "suite": "think",
+      "input": {
+        "optionA": "Finish the deadline work",
+        "optionB": "Sleep early"
+      },
+      "answers": {
+        "desire": "B",
+        "regret": "A"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "think",
+        "category": "work",
+        "reversible": true,
+        "questionCount": 2
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "work",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Finish the deadline work",
+                "value": "A"
+              },
+              {
+                "label": "Sleep early",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Finish the deadline work",
+                "value": "A"
+              },
+              {
+                "label": "Sleep early",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Finish the deadline work",
+          "confidence": 68,
+          "reason": "This gives the next few hours a cleaner shape and reduces the mental cost of carrying an unfinished choice.",
+          "tradeoff": "Choosing Finish the deadline work means letting go of Sleep early for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "work",
+          "actual": "work",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 2,
+          "actual": 2,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Finish the deadline work",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 68,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "This gives the next few hours a cleaner shape and reduces the mental cost of carrying an unfinished choice.",
+            "Choosing Finish the deadline work means letting go of Sleep early for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "T005",
+      "suite": "think",
+      "input": {
+        "optionA": "Go on the date",
+        "optionB": "Reschedule"
+      },
+      "answers": {
+        "desire": "A",
+        "regret": "A"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "think",
+        "category": "social",
+        "reversible": true,
+        "questionCount": 2,
+        "chosenIndex": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "social",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Go on the date",
+                "value": "A"
+              },
+              {
+                "label": "Reschedule",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Go on the date",
+                "value": "A"
+              },
+              {
+                "label": "Reschedule",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Go on the date",
+          "confidence": 83,
+          "reason": "The stronger regret risk is the missed experience. Unfinished low-priority work is usually easier to recover than a moment that passes.",
+          "tradeoff": "Choosing Go on the date means letting go of Reschedule for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "social",
+          "actual": "social",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 2,
+          "actual": 2,
+          "pass": true
+        },
+        {
+          "criterion": "chosenIndex",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Go on the date",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 83,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "The stronger regret risk is the missed experience. Unfinished low-priority work is usually easier to recover than a moment that passes.",
+            "Choosing Go on the date means letting go of Reschedule for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "D001",
+      "suite": "deep",
+      "input": {
+        "optionA": "Accept Offer A",
+        "optionB": "Accept Offer B"
+      },
+      "answers": {
+        "desire": "A",
+        "regret": "neutral",
+        "future": "B",
+        "recovery": "A"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "deep",
+        "category": "career",
+        "reversible": false,
+        "questionCount": 4
+      },
+      "actual": {
+        "classification": {
+          "mode": "deep",
+          "category": "career",
+          "reversible": false,
+          "impact": "high",
+          "explanation": "This choice has longer consequences, so a little structure will help."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Accept Offer A",
+                "value": "A"
+              },
+              {
+                "label": "Accept Offer B",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Accept Offer A",
+                "value": "A"
+              },
+              {
+                "label": "Accept Offer B",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "future",
+            "prompt": "Six months from now, which option better fits the person you want to become?",
+            "choices": [
+              {
+                "label": "Accept Offer A",
+                "value": "A"
+              },
+              {
+                "label": "Accept Offer B",
+                "value": "B"
+              },
+              {
+                "label": "Still unclear",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "recovery",
+            "prompt": "If it goes badly, which choice is easier to recover from?",
+            "choices": [
+              {
+                "label": "Accept Offer A",
+                "value": "A"
+              },
+              {
+                "label": "Accept Offer B",
+                "value": "B"
+              },
+              {
+                "label": "Equally recoverable",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Accept Offer A",
+          "confidence": 68,
+          "reason": "It fits the future-facing signal in your answers while leaving the more manageable downside.",
+          "tradeoff": "Choosing Accept Offer A means letting go of Accept Offer B for now.",
+          "regretEstimate": "Moderate regret risk, but the downside appears more recoverable."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "deep",
+          "actual": "deep",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "career",
+          "actual": "career",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": false,
+          "actual": false,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 4,
+          "actual": 4,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Accept Offer A",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 68,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "It fits the future-facing signal in your answers while leaving the more manageable downside.",
+            "Choosing Accept Offer A means letting go of Accept Offer B for now.",
+            "Moderate regret risk, but the downside appears more recoverable."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "D002",
+      "suite": "deep",
+      "input": {
+        "optionA": "Move city for the job",
+        "optionB": "Stay near family"
+      },
+      "answers": {
+        "desire": "B",
+        "regret": "A",
+        "future": "A",
+        "recovery": "B"
+      },
+      "historySeeds": [],
+      "expected": {
+        "mode": "deep",
+        "category": "career",
+        "reversible": false,
+        "questionCount": 4
+      },
+      "actual": {
+        "classification": {
+          "mode": "deep",
+          "category": "career",
+          "reversible": false,
+          "impact": "high",
+          "explanation": "This choice has longer consequences, so a little structure will help."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Move city for the job",
+                "value": "A"
+              },
+              {
+                "label": "Stay near family",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Move city for the job",
+                "value": "A"
+              },
+              {
+                "label": "Stay near family",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "future",
+            "prompt": "Six months from now, which option better fits the person you want to become?",
+            "choices": [
+              {
+                "label": "Move city for the job",
+                "value": "A"
+              },
+              {
+                "label": "Stay near family",
+                "value": "B"
+              },
+              {
+                "label": "Still unclear",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "recovery",
+            "prompt": "If it goes badly, which choice is easier to recover from?",
+            "choices": [
+              {
+                "label": "Move city for the job",
+                "value": "A"
+              },
+              {
+                "label": "Stay near family",
+                "value": "B"
+              },
+              {
+                "label": "Equally recoverable",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Move city for the job",
+          "confidence": 61,
+          "reason": "It fits the future-facing signal in your answers while leaving the more manageable downside.",
+          "tradeoff": "Choosing Move city for the job means letting go of Stay near family for now.",
+          "regretEstimate": "Moderate regret risk, but the downside appears more recoverable."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "deep",
+          "actual": "deep",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "career",
+          "actual": "career",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": false,
+          "actual": false,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 4,
+          "actual": 4,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Move city for the job",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 61,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "It fits the future-facing signal in your answers while leaving the more manageable downside.",
+            "Choosing Move city for the job means letting go of Stay near family for now.",
+            "Moderate regret risk, but the downside appears more recoverable."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "B001",
+      "suite": "boundary",
+      "input": {
+        "optionA": "咖啡",
+        "optionB": "抹茶"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "food",
+        "reversible": true,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "food",
+          "reversible": true,
+          "impact": "low",
+          "explanation": "This is reversible. It doesn't deserve a long debate."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "咖啡",
+          "confidence": 73,
+          "reason": "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+          "tradeoff": "Choosing 咖啡 means letting go of 抹茶 for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "food",
+          "actual": "food",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "咖啡",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Both options are workable, and this one is easy to reverse. The value now is ending the loop, not finding a perfect answer.",
+            "Choosing 咖啡 means letting go of 抹茶 for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "B002",
+      "suite": "boundary",
+      "input": {
+        "optionA": "Accept a job offer",
+        "optionB": "Decline it",
+        "preferredMode": "fast"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "mode": "fast",
+        "category": "career",
+        "reversible": false,
+        "questionCount": 0
+      },
+      "actual": {
+        "classification": {
+          "mode": "fast",
+          "category": "career",
+          "reversible": false,
+          "impact": "low",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Accept a job offer",
+          "confidence": 73,
+          "reason": "Your answers lean this way, and there is not enough benefit in collecting more information before acting.",
+          "tradeoff": "Choosing Accept a job offer means letting go of Decline it for now.",
+          "regretEstimate": "Moderate regret risk, but the downside appears more recoverable."
+        },
+        "historyCount": 0
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "fast",
+          "actual": "fast",
+          "pass": true
+        },
+        {
+          "criterion": "category",
+          "expected": "career",
+          "actual": "career",
+          "pass": true
+        },
+        {
+          "criterion": "reversible",
+          "expected": false,
+          "actual": false,
+          "pass": true
+        },
+        {
+          "criterion": "questionCount",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Accept a job offer",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 73,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "Your answers lean this way, and there is not enough benefit in collecting more information before acting.",
+            "Choosing Accept a job offer means letting go of Decline it for now.",
+            "Moderate regret risk, but the downside appears more recoverable."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "B003",
+      "suite": "boundary",
+      "input": {
+        "optionA": "Coffee",
+        "optionB": "Coffee"
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "validationError": "These two options look the same."
+      },
+      "actual": {
+        "validationError": "These two options look the same."
+      },
+      "checks": [
+        {
+          "criterion": "validationError",
+          "expected": "These two options look the same.",
+          "actual": "These two options look the same.",
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "B004",
+      "suite": "boundary",
+      "input": {
+        "optionA": "Coffee",
+        "optionB": ""
+      },
+      "answers": {},
+      "historySeeds": [],
+      "expected": {
+        "validationError": "Two options are required."
+      },
+      "actual": {
+        "validationError": "Two options are required."
+      },
+      "checks": [
+        {
+          "criterion": "validationError",
+          "expected": "Two options are required.",
+          "actual": "Two options are required.",
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "M001",
+      "suite": "memory",
+      "input": {
+        "optionA": "Stay home tonight",
+        "optionB": "Go out with friends"
+      },
+      "answers": {},
+      "historySeeds": [
+        {
+          "finalChoiceIndex": 1,
+          "rating": "loved"
+        }
+      ],
+      "expected": {
+        "mode": "think",
+        "chosenIndex": 1,
+        "historyUsed": true
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "social",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Go out with friends",
+          "confidence": 83,
+          "reason": "A similar choice ended with “Go out with friends,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+          "tradeoff": "Choosing Go out with friends means letting go of Stay home tonight for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost.",
+          "memoryNote": "Or found a related decision from Aug 10."
+        },
+        "historyCount": 1
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "chosenIndex",
+          "expected": 1,
+          "actual": 1,
+          "pass": true
+        },
+        {
+          "criterion": "historyUsed",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Go out with friends",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 83,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "A similar choice ended with “Go out with friends,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+            "Choosing Go out with friends means letting go of Stay home tonight for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "M002",
+      "suite": "memory",
+      "input": {
+        "optionA": "Stay home tonight",
+        "optionB": "Go out with friends"
+      },
+      "answers": {},
+      "historySeeds": [
+        {
+          "finalChoiceIndex": 1,
+          "rating": "regretted"
+        },
+        {
+          "finalChoiceIndex": 1,
+          "rating": "regretted"
+        },
+        {
+          "finalChoiceIndex": 1,
+          "rating": "regretted"
+        }
+      ],
+      "expected": {
+        "mode": "think",
+        "chosenIndex": 0,
+        "historyUsed": true
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "social",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Stay home tonight",
+          "confidence": 72,
+          "reason": "A similar choice ended with “Go out with friends,” and you regretted it. Your own evidence matters more than another round of guessing.",
+          "tradeoff": "Choosing Stay home tonight means letting go of Go out with friends for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost.",
+          "memoryNote": "Or found a related decision from Aug 10."
+        },
+        "historyCount": 3
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "chosenIndex",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "historyUsed",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Stay home tonight",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 72,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "A similar choice ended with “Go out with friends,” and you regretted it. Your own evidence matters more than another round of guessing.",
+            "Choosing Stay home tonight means letting go of Go out with friends for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "M003",
+      "suite": "memory",
+      "input": {
+        "optionA": "Stay home tonight",
+        "optionB": "Go out with friends"
+      },
+      "answers": {},
+      "historySeeds": [
+        {
+          "finalChoiceIndex": 0,
+          "rating": "loved"
+        },
+        {
+          "finalChoiceIndex": 0,
+          "rating": "loved"
+        }
+      ],
+      "expected": {
+        "mode": "think",
+        "chosenIndex": 0,
+        "historyUsed": true
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "social",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Stay home tonight",
+                "value": "A"
+              },
+              {
+                "label": "Go out with friends",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 0,
+          "choice": "Stay home tonight",
+          "confidence": 72,
+          "reason": "A similar choice ended with “Stay home tonight,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+          "tradeoff": "Choosing Stay home tonight means letting go of Go out with friends for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost.",
+          "memoryNote": "Or found a related decision from Aug 10."
+        },
+        "historyCount": 2
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "chosenIndex",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "criterion": "historyUsed",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Stay home tonight",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 72,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "A similar choice ended with “Stay home tonight,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+            "Choosing Stay home tonight means letting go of Go out with friends for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    },
+    {
+      "id": "M004",
+      "suite": "memory",
+      "input": {
+        "optionA": "Write my thesis tonight",
+        "optionB": "Rest without guilt"
+      },
+      "answers": {},
+      "historySeeds": [
+        {
+          "finalChoiceIndex": 1,
+          "rating": "loved",
+          "optionA": "Study tonight",
+          "optionB": "Rest tonight"
+        }
+      ],
+      "expected": {
+        "mode": "think",
+        "historyUsed": true
+      },
+      "actual": {
+        "classification": {
+          "mode": "think",
+          "category": "study",
+          "reversible": true,
+          "impact": "medium",
+          "explanation": "There is a real emotional trade-off here, but only a few things can change the answer."
+        },
+        "questions": [
+          {
+            "id": "desire",
+            "prompt": "If guilt disappeared for a moment, which one would you actually want?",
+            "choices": [
+              {
+                "label": "Write my thesis tonight",
+                "value": "A"
+              },
+              {
+                "label": "Rest without guilt",
+                "value": "B"
+              },
+              {
+                "label": "Honestly, neither",
+                "value": "neutral"
+              }
+            ]
+          },
+          {
+            "id": "regret",
+            "prompt": "Tomorrow morning, which choice would you be more likely to regret missing?",
+            "choices": [
+              {
+                "label": "Write my thesis tonight",
+                "value": "A"
+              },
+              {
+                "label": "Rest without guilt",
+                "value": "B"
+              },
+              {
+                "label": "About the same",
+                "value": "neutral"
+              }
+            ]
+          }
+        ],
+        "recommendation": {
+          "chosenIndex": 1,
+          "choice": "Rest without guilt",
+          "confidence": 75,
+          "reason": "A similar choice ended with “Rest tonight,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+          "tradeoff": "Choosing Rest without guilt means letting go of Write my thesis tonight for now.",
+          "regretEstimate": "Low regret risk — you can revise this without much cost.",
+          "memoryNote": "Or found a related decision from Aug 10."
+        },
+        "historyCount": 1
+      },
+      "checks": [
+        {
+          "criterion": "mode",
+          "expected": "think",
+          "actual": "think",
+          "pass": true
+        },
+        {
+          "criterion": "historyUsed",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "criterion": "closure",
+          "expected": "one supplied option",
+          "actual": "Rest without guilt",
+          "pass": true
+        },
+        {
+          "criterion": "confidenceRange",
+          "expected": "50–95",
+          "actual": 75,
+          "pass": true
+        },
+        {
+          "criterion": "explanationComplete",
+          "expected": "reason + tradeoff + regret",
+          "actual": [
+            "A similar choice ended with “Rest tonight,” and you were glad you did. Your own evidence matters more than another round of guessing.",
+            "Choosing Rest without guilt means letting go of Write my thesis tonight for now.",
+            "Low regret risk — you can revise this without much cost."
+          ],
+          "pass": true
+        }
+      ],
+      "error": null,
+      "pass": true
+    }
+  ]
+}

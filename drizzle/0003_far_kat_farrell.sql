@@ -1,0 +1,1 @@
+CREATE INDEX `idx_decisions_user_created` ON `decisions` (`user_id`,`created_at`);
