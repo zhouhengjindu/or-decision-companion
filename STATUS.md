@@ -78,4 +78,6 @@
 
 已验证：`pnpm typecheck` 通过；43/43 单元测试通过；`pnpm lint` 0 error / 3 条既有 `<img>` warning；`pnpm build` 通过；3 个 D1 migration 在内存 SQLite 空库成功执行。未运行原项目 E2E，因为它会清理本地 D1；尚需为新配置单独建立隔离测试库再验证鉴权旅程。
 
-待完成的外部账号步骤：Cloudflare CLI 尚未登录，需新建 D1/R2 并补真实数据库 ID；GitHub OAuth 应用和 Worker 运行 secrets 尚未配置；`zhouhengjindu/or-decision-companion` 尚不存在；GitHub Actions 需要 Cloudflare API token/account ID secrets。当前没有自定义域名，因此计划先用 `workers.dev`。
+本地 Git 已初始化，`main` 的初始提交为 `98d2516`；提交包含 93 个文件，工作区干净，`origin` 指向 `https://github.com/zhouhengjindu/or-decision-companion.git`。未包含本地 D1、真实密钥或 `outputs/`。
+
+账号侧核验：GitHub 连接器已认证为 `zhouhengjindu`，但目标仓库返回 404；本机 Chrome 需要手动解锁才能继续浏览器操作。Cloudflare Wrangler 登录曾启动，但授权回调超时，`wrangler whoami` 仍显示未认证。需解锁后重新完成 Cloudflare CLI 登录，并创建 GitHub 仓库；再新建 D1/R2、替换真实数据库 ID、创建 GitHub OAuth App、配置 Worker 运行密钥和 GitHub Actions 部署 secrets。当前没有自定义域名，因此计划先用 `workers.dev`。
