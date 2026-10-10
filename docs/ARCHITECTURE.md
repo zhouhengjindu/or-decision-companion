@@ -45,7 +45,7 @@ interface AIProvider {
 - D1 图片使用私有 key；读取通过校验会话与决定归属的 API。
 - `.wrangler/` 本地数据库和 `.dev.vars` 不进入 Git；生产 D1 从 Cloudflare 新建并经 migration 初始化，不导入本机私人数据。
 - 音频开关和草稿属于设备 UI 偏好，可放浏览器存储；正式决定必须进 SQLite。
-- 图片在浏览器压缩后存D1 私有图片表，D1 保存图片字节、key 和大小；单账户图片上限 25 MB。
+- 图片在浏览器压缩后存 D1 私有图片表，D1 保存图片字节、key 和大小；单账户图片上限 25 MB。
 
 ## 降级策略
 

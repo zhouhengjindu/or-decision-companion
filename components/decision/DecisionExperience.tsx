@@ -278,7 +278,7 @@ export function DecisionExperience() {
               </div>
             </form>
             <Feedback error={error} notice={notice} />
-            <p className="privacy-note">Private by default · stays on this computer</p>
+            <p className="privacy-note">Private by account · saved only when you choose</p>
           </motion.div>
         )}
 

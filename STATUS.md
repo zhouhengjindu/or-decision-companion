@@ -126,3 +126,13 @@
 - 测试地址 https://or-decision-companion-staging.zhouhengjindu.workers.dev 已部署。两个临时测试账户验证了列表隔离、跨账户记录/图片读取与删除 404、JPEG 字节读回一致、账户清空不影响其他账户、访客 401。测试账户/会话/决定均仅在 staging 创建并在 finally 清理。
 - 45/45 unit tests、typecheck 通过；lint 0 error / 3 个既有图片 warning。
 - 正式站点待本次代码 push 后 Actions 迁移与发布，再验收真实 OAuth 回调。不能将 staging 的合成 session 测试视为真实 GitHub OAuth 验收。
+
+
+### 2026-10-10 正式站点已发布（免绑卡）
+
+- main 提交 `48ae56e` 已通过 [CI](https://github.com/zhouhengjindu/or-decision-companion/actions/runs/38024988511) 与 [Deploy](https://github.com/zhouhengjindu/or-decision-companion/actions/runs/38024988506)，生产 D1 第 5 个 migration 已自动执行。
+- 正式地址 https://or-decision-companion.zhouhengjindu.workers.dev ：首页 HTTP 200，个人 API 未登录 401，GitHub OAuth 启动 HTTP 200，授权目标 github.com 且 callback 指向本站 `/api/auth/callback/github`。
+- 运行服务只绑定 D1，没有 R2，没有添加支付方式或启用付费套餐。
+- staging 合成会话的两账户 HTTP 验收全部通过，临时账户/会话/决定已清理。
+- 浏览器原生 AX 与截图只返回空白内容区域，内置浏览器连接超时；HTTP 返回完整页面内容。尚未获得真实 GitHub 授权回跳或用户界面完成旅程的证据。下一步需要在用户可见浏览器打开登录页并完成 GitHub 授权，再确认已登录身份与保存一条可删除测试决定。
+- 收尾修正页面原有“stays on this computer”文案，避免云端保存后产生错误隐私预期；改为按账户私有、选择保存后才持久化。

@@ -35,7 +35,7 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 - `evaluation/`：dataset、criteria、runner、原始结果和报告；不要手填通过率。
 - `docs/OR_PRODUCT_BOOK.md`：面向人的产品叙事；`README.md`：运行入口；`STATUS.md`：现役状态。
 - `outputs/`、`work/`、`references/` 保持各自交付、临时、参考用途。
-- 保持本地优先、无付费 API、无外部生产部署；不把假数据放进 Insights。
+- 保持本地优先、无付费 API；经用户授权公开部署采用免费 Workers + D1；不把假数据放进 Insights。
 - 决策计算保留本地确定性规则，不发送决定文本到外部模型。部署方案见 `outputs/2026-09-30-Or作品集公开部署完整方案.md`；公开仓库不得包含 `.dev.vars`、`.wrangler/`、本机数据库、用户记录或密钥。
 - 任何本地 D1 都不得作为生产数据库上传。数据库迁移只对 Cloudflare 新建的远程 D1 执行，E2E 和清库命令必须使用隔离测试数据库。
 
@@ -52,3 +52,5 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 2026-10-10 云端配置：Cloudflare Token 已验证、GitHub Actions 两项部署 secrets 已保存；全新远程 D1 已创建并完成 4 个 migration（业务记录 0 条），免费账户子域 `zhouhengjindu.workers.dev` 已注册。R2 尚需网页启用，OAuth App 表单待最终创建授权；Worker 尚未部署。新增独立内存 SQLite 两账户隔离测试，45/45 tests 和 typecheck 通过。继续时读取 `STATUS.md` 最新补记；本机 D1 仍不得迁移或清空。
 
 2026-10-10 免绑卡调整：用户无法开通需要绑卡的 R2，改用 Workers Free + D1 保存结构化数据与私有 JPEG 图片，不启用 R2。GitHub OAuth 凭据已安全保存。图片单张最多 1.5 MB、每账户最多 25 MB，单库免费上限 500 MB，适用于小规模作品集。先在独立 staging D1/Worker 验证读写和隔离，再部署生产。
+
+2026-10-10 正式发布：免绑卡版本已通过 GitHub CI 与 Deploy（38024988511 / 38024988506），正式网址 https://or-decision-companion.zhouhengjindu.workers.dev 已返回首页 200、个人 API 401，GitHub OAuth 启动接口 200 且回调地址正确。staging 两账户 HTTP 读写/图片/清空隔离已验证并清理测试数据。浏览器工具无法读取网站画面，真实 GitHub 授权回跳与人工界面验收尚待完成，不能将服务端检查写成完整用户旅程通过。

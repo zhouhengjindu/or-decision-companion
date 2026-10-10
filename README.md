@@ -56,7 +56,7 @@ pnpm build
 ```
 
 - Evaluation：20 个可追溯样本，逐项保留真实输入、history seeds、完整输出、断言与错误；当前 20 / 20 通过。报告由 runner 自动生成，不手填结果。
-- 单元测试：43 条，其中 32 个标准决策分类场景；覆盖 decision engine、历史 outcome 修正与 insights。
+- 单元测试：45 条，其中 32 个标准决策分类场景；覆盖 decision engine、历史 outcome 修正、insights 与两账户数据/图片隔离。
 - E2E：桌面 10 条旅程 + 移动端 11 条旅程，覆盖 Fast、Think、Accept、Override、输入拦截、Diary、Outcome、历史影响、PNG Card、图片、Ambient 偏好、Voice fallback 与移动端主操作。
 - Playwright 默认复用本机 Google Chrome；当前 macOS 环境不支持下载 Playwright 自带的 Chromium，因此配置使用稳定版 Chrome channel。
 
@@ -64,16 +64,19 @@ pnpm build
 
 - GitHub OAuth 仅用于账号身份，不请求仓库读写权限；Better Auth 会话与个人记录分别落在 D1 的认证表和业务表。
 - 所有个人记录 API 从已验证的服务端会话取得 user ID，并在读、写、更新和删除查询中检查归属；匿名请求返回 401。
-- 图片在浏览器压缩后上传至D1 私有图片表；D1 同时保存图片字节、key 与大小。图片读取仍经过会话与决定归属检查。
+- 图片在浏览器压缩后上传至 D1 私有图片表；D1 同时保存图片字节、key 与大小。图片读取仍经过会话与决定归属检查。
 - Settings 的清空操作只针对当前登录用户，需二次确认。
 - 公开部署前不会迁移本机那条私人决定；不要把 `.dev.vars`、`.wrangler/` 或本机数据库文件加入 Git。
 
 ## Cloudflare 部署
 
+公开作品集：https://or-decision-companion.zhouhengjindu.workers.dev
+
+免绑卡方案：Workers Free + D1，取消 R2。图片与决定均按账户隔离；每图最多 1.5 MB、每账户最多 25 MB，D1 免费单库容量 500 MB，适用于小规模展示。
+
 Worker 使用 `wrangler.jsonc`，线上入口默认是免费的 `workers.dev` 子域名。GitHub Actions 的生产环境需要 `CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ACCOUNT_ID` 两个部署 secrets；Worker 运行环境还需要 `BETTER_AUTH_SECRET`、`BETTER_AUTH_URL`、`GITHUB_CLIENT_ID` 和 `GITHUB_CLIENT_SECRET`。所有真实密钥只写入 Cloudflare Secrets / GitHub Actions Secrets，不写入仓库。
 
 ```bash
-pnpm db:migrate:local
 pnpm db:migrate:remote
 pnpm deploy
 ```
