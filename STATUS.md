@@ -148,3 +148,5 @@
 - staging 发布版本 `7b0137d7-316e-4ec0-94a5-65c7153ad097` 成功；生产待本次提交发布。浏览器连接仍有超时/内容区域不可读，不以此宣称视觉验收通过。
 
 - staging 实际 HTTP 验证通过：三个选项、C 推荐/选择、多行背景、第三张 JPEG 字节读回、跨账户读取/删除拒绝、清空隔离、匿名 401、重复选项与越界索引 400。临时测试账户/会话/决定均已清理，仅操作 staging。
+
+- 正式提交 `ac946c0` 已通过 [CI](https://github.com/zhouhengjindu/or-decision-companion/actions/runs/38027312919) 与 [Deploy](https://github.com/zhouhengjindu/or-decision-companion/actions/runs/38027312858)。正式首页、Diary、Insights、Settings 均 HTTP 200，首页 HTML 已出现添加选项和背景 textarea。原生浏览器及内置浏览器读取仍不可靠，未完成刷新后导航点击与视觉验收；下一步在用户可见页面确认各入口、添加 C、背景输入与保存结果。
