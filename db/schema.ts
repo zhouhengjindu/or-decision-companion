@@ -1,4 +1,4 @@
-import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { blob, index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const authUsers = sqliteTable('auth_users', {
   id: text('id').primaryKey(),
@@ -35,6 +35,12 @@ export const options = sqliteTable('options', {
   imageKey: text('image_key'),
   imageSize: integer('image_size').notNull().default(0),
 }, (table) => [uniqueIndex('idx_options_decision_position').on(table.decisionId, table.position)]);
+
+export const decisionImages = sqliteTable('decision_images', {
+  imageKey: text('image_key').primaryKey(),
+  decisionId: text('decision_id').notNull().references(() => decisions.id, { onDelete: 'cascade' }),
+  data: blob('data', { mode: 'buffer' }).notNull(),
+});
 
 export const recommendations = sqliteTable('recommendations', {
   id: text('id').primaryKey(),

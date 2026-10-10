@@ -17,6 +17,10 @@ const schemaStatements = [
     id TEXT PRIMARY KEY, decision_id TEXT NOT NULL, position INTEGER NOT NULL, label TEXT NOT NULL, image_key TEXT, image_size INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(decision_id) REFERENCES decisions(id) ON DELETE CASCADE, UNIQUE(decision_id, position)
   )`,
+  `CREATE TABLE IF NOT EXISTS decision_images (
+    image_key TEXT PRIMARY KEY, decision_id TEXT NOT NULL, data BLOB NOT NULL,
+    FOREIGN KEY(decision_id) REFERENCES decisions(id) ON DELETE CASCADE
+  )`,
   `CREATE TABLE IF NOT EXISTS recommendations (
     id TEXT PRIMARY KEY, decision_id TEXT NOT NULL UNIQUE, option_position INTEGER NOT NULL, confidence INTEGER NOT NULL,
     reason TEXT NOT NULL, tradeoff TEXT NOT NULL, regret_estimate TEXT NOT NULL,
@@ -174,17 +178,7 @@ export async function createDecision(userId: string, payload: CreateDecisionPayl
   const imageBytes = images.reduce((sum, image) => sum + (image?.byteLength ?? 0), 0);
   if ((currentImageBytes?.size ?? 0) + imageBytes > 25_000_000) throw new Error('Your account has reached the 25 MB image storage limit.');
   const imageKeys = images.map((image, index) => image ? `users/${encodeURIComponent(userId)}/decisions/${decisionId}/${index === 0 ? 'a' : 'b'}.jpg` : null);
-  const bucket = env.IMAGES;
-  const uploaded: string[] = [];
-  if (images.some(Boolean) && !bucket) throw new Error('Image storage is not available right now.');
-  try {
-    for (let index = 0; index < images.length; index += 1) {
-      if (images[index] && imageKeys[index] && bucket) {
-        await bucket.put(imageKeys[index]!, images[index]!, { httpMetadata: { contentType: 'image/jpeg' } });
-        uploaded.push(imageKeys[index]!);
-      }
-    }
-    await database.batch([
+  await database.batch([
     database.prepare(`INSERT INTO decisions
       (id, user_id, question, context, mode, category, reversible, duration_seconds, mood, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
@@ -201,11 +195,10 @@ export async function createDecision(userId: string, payload: CreateDecisionPayl
       .bind(crypto.randomUUID(), decisionId, payload.finalChoiceIndex, payload.accepted ? 1 : 0),
     database.prepare('INSERT INTO reflections (id, decision_id, kind, body, created_at) VALUES (?, ?, ?, ?, ?)')
       .bind(crypto.randomUUID(), decisionId, 'decision', payload.reflection, now),
-    ]);
-  } catch (error) {
-    await bucket?.delete(uploaded).catch(() => undefined);
-    throw error;
-  }
+    ...images.flatMap((image, index) => image ? [database.prepare(
+      'INSERT INTO decision_images (image_key, decision_id, data) VALUES (?, ?, ?)'
+    ).bind(imageKeys[index], decisionId, image)] : []),
+  ]);
   return getDecision(decisionId, userId);
 }
 
@@ -217,11 +210,14 @@ export async function getDecisionImageKey(id: string, userId: string, position: 
   return row?.imageKey ?? null;
 }
 
-export async function listDecisionImageKeys(userId: string) {
+export async function getDecisionImage(id: string, userId: string, position: 0 | 1) {
   await ensureSchema();
-  const result = await db().prepare(`SELECT o.image_key AS imageKey FROM options o JOIN decisions d ON d.id = o.decision_id
-    WHERE d.user_id = ? AND o.image_key IS NOT NULL`).bind(userId).all<{ imageKey: string }>();
-  return result.results.map(({ imageKey }) => imageKey);
+  const row = await db().prepare(`SELECT i.data FROM decision_images i
+    JOIN options o ON o.image_key = i.image_key JOIN decisions d ON d.id = o.decision_id
+    WHERE d.id = ? AND d.user_id = ? AND o.position = ?`)
+    .bind(id, userId, position).first<{ data: number[] | ArrayBuffer | Uint8Array }>();
+  if (!row) return null;
+  return row.data instanceof ArrayBuffer ? new Uint8Array(row.data) : new Uint8Array(row.data);
 }
 
 export async function exportDecisions(userId: string) {
@@ -250,8 +246,6 @@ export async function deleteDecision(id: string, userId: string) {
   const database = db();
   const owned = await database.prepare('SELECT id FROM decisions WHERE id = ? AND user_id = ?').bind(id, userId).first();
   if (!owned) return false;
-  const imageKeys = await database.prepare('SELECT image_key AS imageKey FROM options WHERE decision_id = ? AND image_key IS NOT NULL')
-    .bind(id).all<{ imageKey: string }>();
   await database.batch([
     database.prepare('DELETE FROM outcomes WHERE decision_id = ? AND EXISTS (SELECT 1 FROM decisions WHERE id = ? AND user_id = ?)').bind(id, id, userId),
     database.prepare('DELETE FROM reflections WHERE decision_id = ? AND EXISTS (SELECT 1 FROM decisions WHERE id = ? AND user_id = ?)').bind(id, id, userId),
@@ -260,14 +254,12 @@ export async function deleteDecision(id: string, userId: string) {
     database.prepare('DELETE FROM options WHERE decision_id = ? AND EXISTS (SELECT 1 FROM decisions WHERE id = ? AND user_id = ?)').bind(id, id, userId),
     database.prepare('DELETE FROM decisions WHERE id = ? AND user_id = ?').bind(id, userId),
   ]);
-  if (imageKeys.results.length && env.IMAGES) await env.IMAGES.delete(imageKeys.results.map(({ imageKey }) => imageKey));
   return true;
 }
 
 export async function clearDecisions(userId: string) {
   await ensureSchema();
   const database = db();
-  const imageKeys = await listDecisionImageKeys(userId);
   await database.batch([
     database.prepare('DELETE FROM outcomes WHERE decision_id IN (SELECT id FROM decisions WHERE user_id = ?)').bind(userId),
     database.prepare('DELETE FROM reflections WHERE decision_id IN (SELECT id FROM decisions WHERE user_id = ?)').bind(userId),
@@ -278,5 +270,4 @@ export async function clearDecisions(userId: string) {
     database.prepare('DELETE FROM patterns WHERE user_id = ?').bind(userId),
     database.prepare('DELETE FROM preferences WHERE user_id = ?').bind(userId),
   ]);
-  if (imageKeys.length && env.IMAGES) await env.IMAGES.delete(imageKeys);
 }

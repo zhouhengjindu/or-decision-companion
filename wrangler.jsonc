@@ -3,9 +3,13 @@
   "name": "or-decision-companion",
   "main": "vinext/server/app-router-entry",
   "compatibility_date": "2026-09-30",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": true,
-  "observability": { "enabled": true },
+  "observability": {
+    "enabled": true
+  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -14,7 +18,17 @@
       "migrations_dir": "drizzle"
     }
   ],
-  "r2_buckets": [
-    { "binding": "IMAGES", "bucket_name": "or-decision-companion-images" }
-  ]
+  "env": {
+    "staging": {
+      "name": "or-decision-companion-staging",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "or-decision-companion-staging",
+          "database_id": "715ca2b9-0c37-4fca-b8de-ab26cf885712",
+          "migrations_dir": "drizzle"
+        }
+      ]
+    }
+  }
 }

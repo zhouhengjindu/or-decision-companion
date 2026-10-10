@@ -108,3 +108,21 @@
 - GitHub OAuth App 表单已填好名称、主页与唯一回调 `/api/auth/callback/github`，未启用通配符。等待用户确认注册及生成 Client Secret；Worker 运行 secrets 还未上传。
 - 新增使用独立内存 SQLite 执行实际业务 SQL 的两账户隔离测试，覆盖列表/导出/读取/结果修改/删除/图片归属/单账户清空。45/45 tests、typecheck 通过；lint 0 error / 3 条既有图片 warning。这不是线上 OAuth 或真实 R2 验收，后两项仍待完成。
 - 下一步：确认 R2 启用条件与 OAuth App 创建授权，配置生产和隔离验收资源及运行 secrets，发布并验证登录回调和图片读写后再宣布上线。
+
+### 2026-10-10 OAuth 与验收环境补记
+
+- 用户确认 R2 页面不要求支付方式，并确认创建 GitHub 登录应用。OAuth App 已成功注册：`https://github.com/settings/applications/3919426`，名称 `Or Decision Companion`，唯一回调为正式 Worker 的 `/api/auth/callback/github`。生成 Client Secret 时 GitHub 要求 Touch ID；已发起验证，等待用户完成。尚未取得或上传 OAuth secret。
+- 已创建独立远程 D1 `or-decision-companion-staging`，ID `715ca2b9-0c37-4fca-b8de-ab26cf885712`，4 个 migration 完成；`wrangler.jsonc` 已加入 staging 环境，并使用独立数据库及预定独立 R2 bucket。
+- R2 API 仍返回未启用；网页控制工具读取启用页空白，等待用户页面截图核实启用按钮/条款。不得依据“无支付方式”自动推断已启用。
+- staging Worker 已由 secrets 命令创建占位实例，两个独立认证运行 secrets 已上传；尚未部署 Or 应用代码，不能作为已上线网站交付。
+
+
+### 2026-10-10 免绑卡版本发布准备
+
+- 用户确认 R2 要求绑卡且无可用银行卡，取消 R2，采用 Workers Free + D1 私有 BLOB 图片表；没有启用付费套餐或支付方式。
+- GitHub OAuth App 已创建并安全保存 client secret，生产 Worker 的 4 项运行 secrets 已上传。
+- 发布工具原先 `@vinext/cloudflare@1.0.0` 与 `vinext@1.0.0-beta.3` 不兼容；已将前者精确固定到 `1.0.0-beta.3`，构建和测试环境发布通过。
+- 第 5 个 migration 增加图片表，已在独立 staging D1 应用；图片与决定事务写入、级联删除，每张最多 1.5 MB、每账户最多 25 MB。
+- 测试地址 https://or-decision-companion-staging.zhouhengjindu.workers.dev 已部署。两个临时测试账户验证了列表隔离、跨账户记录/图片读取与删除 404、JPEG 字节读回一致、账户清空不影响其他账户、访客 401。测试账户/会话/决定均仅在 staging 创建并在 finally 清理。
+- 45/45 unit tests、typecheck 通过；lint 0 error / 3 个既有图片 warning。
+- 正式站点待本次代码 push 后 Actions 迁移与发布，再验收真实 OAuth 回调。不能将 staging 的合成 session 测试视为真实 GitHub OAuth 验收。

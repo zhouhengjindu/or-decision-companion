@@ -1,16 +1,16 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 
-const testEnv = vi.hoisted(() => ({ DB: undefined as unknown, IMAGES: undefined as unknown }));
+const testEnv = vi.hoisted(() => ({ DB: undefined as unknown }));
 vi.mock('cloudflare:workers', () => ({ env: testEnv }));
 
 import {
   clearDecisions, createDecision, deleteDecision, ensureSchema, exportDecisions,
-  getDecision, getDecisionImageKey, listDecisions, saveOutcome, type CreateDecisionPayload,
+  getDecision, getDecisionImage, getDecisionImageKey, listDecisions, saveOutcome, type CreateDecisionPayload,
 } from '@/db/queries';
 
 // An in-memory SQLite adapter executes the production SQL without opening any
-// local or remote D1 database. Object storage is also confined to this test.
+// local or remote D1 database. Images are stored in the same isolated database.
 const sqlite = new DatabaseSync(':memory:');
 class Statement {
   constructor(private sql: string, private values: SQLInputValue[] = []) {}
@@ -19,7 +19,6 @@ class Statement {
   async all() { return { results: sqlite.prepare(this.sql).all(...this.values) }; }
   async run() { return sqlite.prepare(this.sql).run(...this.values); }
 }
-const objects = new Map<string, Uint8Array>();
 const payload: CreateDecisionPayload = {
   question: 'Choose a lunch', optionA: 'Rice', optionB: 'Noodles', mode: 'fast', category: 'food',
   reversible: true, recommendationIndex: 0, confidence: 75, reason: 'Test fixture',
@@ -40,12 +39,6 @@ beforeAll(async () => {
       } catch (error) { sqlite.exec('ROLLBACK'); throw error; }
     },
   };
-  testEnv.IMAGES = {
-    put: async (key: string, value: Uint8Array) => { objects.set(key, value); },
-    delete: async (keys: string | string[]) => {
-      for (const key of Array.isArray(keys) ? keys : [keys]) objects.delete(key);
-    },
-  };
   sqlite.exec('PRAGMA foreign_keys = ON');
   await ensureSchema();
   for (const id of ['alice', 'bob']) {
@@ -56,7 +49,6 @@ beforeAll(async () => {
 afterAll(() => sqlite.close());
 beforeEach(() => {
   sqlite.exec('DELETE FROM decisions');
-  objects.clear();
 });
 
 describe('private decision ownership with real SQLite queries', () => {
@@ -67,6 +59,8 @@ describe('private decision ownership with real SQLite queries', () => {
     expect((await exportDecisions('bob')).map((item) => item.id)).toEqual([bob.id]);
     expect(await getDecision(alice.id, 'bob')).toBeNull();
     expect(await getDecisionImageKey(alice.id, 'bob', 0)).toBeNull();
+    expect(await getDecisionImage(alice.id, 'bob', 0)).toBeNull();
+    expect(Array.from((await getDecisionImage(alice.id, 'alice', 0))!)).toEqual([255, 216, 255, 217]);
     expect(await saveOutcome(alice.id, 'bob', { rating: 'loved', satisfaction: 5, regret: 0 })).toBeNull();
     expect((await getDecision(alice.id, 'alice'))?.outcome).toBeNull();
     expect(await deleteDecision(alice.id, 'bob')).toBe(false);
@@ -81,8 +75,8 @@ describe('private decision ownership with real SQLite queries', () => {
     await clearDecisions('alice');
     expect(await listDecisions('alice')).toEqual([]);
     expect((await listDecisions('bob')).map((item) => item.id)).toEqual([bob.id]);
-    expect([...objects.keys()]).toEqual([bobImage]);
+    expect(sqlite.prepare('SELECT image_key FROM decision_images').all().map((row) => row.image_key)).toEqual([bobImage]);
     await deleteDecision(bob.id, 'bob');
-    expect(objects.size).toBe(0);
+    expect(sqlite.prepare('SELECT COUNT(*) AS count FROM decision_images').get()?.count).toBe(0);
   });
 });

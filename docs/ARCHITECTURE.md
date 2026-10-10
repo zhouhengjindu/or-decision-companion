@@ -2,7 +2,7 @@
 
 ## 运行形态
 
-Or 的交互与确定性决策引擎运行在 React/TypeScript/Vinext 应用中。公开版部署到 Cloudflare Workers：Better Auth + GitHub OAuth 负责身份会话，D1 存结构化决定与结果，私有 R2 存压缩图片。访客可以计算推荐，但只有已登录账户可读写持久化记录。
+Or 的交互与确定性决策引擎运行在 React/TypeScript/Vinext 应用中。公开版部署到 Cloudflare Workers：Better Auth + GitHub OAuth 负责身份会话，D1 存结构化决定与结果，D1 私有图片表 存压缩图片。访客可以计算推荐，但只有已登录账户可读写持久化记录。
 
 ## 分层
 
@@ -42,10 +42,10 @@ interface AIProvider {
 
 - 用户身份来自服务端验证的 Better Auth 会话；每个个人数据读写 API 都按会话 userId 限定记录归属。
 - 推荐使用确定性规则和历史结果，不向外部 AI 服务发送决定文本。
-- R2 图片使用私有对象 key；读取通过校验会话与决定归属的 API。
+- D1 图片使用私有 key；读取通过校验会话与决定归属的 API。
 - `.wrangler/` 本地数据库和 `.dev.vars` 不进入 Git；生产 D1 从 Cloudflare 新建并经 migration 初始化，不导入本机私人数据。
 - 音频开关和草稿属于设备 UI 偏好，可放浏览器存储；正式决定必须进 SQLite。
-- 图片在浏览器压缩后存私有 R2，D1 保存 key 和大小；单账户图片上限 25 MB。
+- 图片在浏览器压缩后存D1 私有图片表，D1 保存图片字节、key 和大小；单账户图片上限 25 MB。
 
 ## 降级策略
 

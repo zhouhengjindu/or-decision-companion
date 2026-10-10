@@ -25,7 +25,7 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 - React 19、TypeScript、Tailwind CSS、Framer Motion、Vinext。
 - SQLite-compatible D1 + Drizzle；schema 在 `db/schema.ts`，migration 在 `drizzle/`。
 - `AIProvider` 边界在 `lib/ai/provider.ts`，v0.1 使用可重复评测的 `MockAIProvider`。
-- 公开版使用 Better Auth + GitHub OAuth、Cloudflare D1 和私有 R2；所有个人 API 必须从服务端 session 得到 userId，并按记录归属过滤。
+- 公开版使用 Better Auth + GitHub OAuth、Cloudflare D1（含私有压缩图片）；所有个人 API 必须从服务端 session 得到 userId，并按记录归属过滤。
 - 浏览器音频、语音、图片均为渐进增强，失败不得阻断文本决策闭环。
 
 ## 目录与约定
@@ -50,3 +50,5 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 2026-10-10：GitHub CLI 已获用户授权，代码及完整历史已上传公开仓库，首次 GitHub CI 通过。Deploy 因缺少 Cloudflare secrets 在迁移前停止，尚未上线。命令行连接需显式使用系统已有本地代理；Cloudflare 账户后台已恢复登录，设备授权仍有错误，继续检查 API Token 连接方式。详细进度以 `STATUS.md` 的最新补记为准。
 
 2026-10-10 云端配置：Cloudflare Token 已验证、GitHub Actions 两项部署 secrets 已保存；全新远程 D1 已创建并完成 4 个 migration（业务记录 0 条），免费账户子域 `zhouhengjindu.workers.dev` 已注册。R2 尚需网页启用，OAuth App 表单待最终创建授权；Worker 尚未部署。新增独立内存 SQLite 两账户隔离测试，45/45 tests 和 typecheck 通过。继续时读取 `STATUS.md` 最新补记；本机 D1 仍不得迁移或清空。
+
+2026-10-10 免绑卡调整：用户无法开通需要绑卡的 R2，改用 Workers Free + D1 保存结构化数据与私有 JPEG 图片，不启用 R2。GitHub OAuth 凭据已安全保存。图片单张最多 1.5 MB、每账户最多 25 MB，单库免费上限 500 MB，适用于小规模作品集。先在独立 staging D1/Worker 验证读写和隔离，再部署生产。

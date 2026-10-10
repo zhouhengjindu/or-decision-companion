@@ -1,6 +1,5 @@
-import { env } from 'cloudflare:workers';
 import { NextResponse } from 'next/server';
-import { getDecisionImageKey } from '@/db/queries';
+import { getDecisionImage } from '@/db/queries';
 import { requireUser } from '@/lib/require-user';
 
 interface RouteContext { params: Promise<{ id: string; side: string }> }
@@ -11,13 +10,11 @@ export async function GET(request: Request, context: RouteContext) {
   try {
     const { id, side } = await context.params;
     if (side !== 'a' && side !== 'b') return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
-    const key = await getDecisionImageKey(id, user.id, side === 'a' ? 0 : 1);
-    if (!key || !env.IMAGES) return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
-    const image = await env.IMAGES.get(key);
+    const image = await getDecisionImage(id, user.id, side === 'a' ? 0 : 1);
     if (!image) return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
-    return new Response(image.body, {
+    return new Response(image, {
       headers: {
-        'content-type': image.httpMetadata?.contentType ?? 'image/jpeg',
+        'content-type': 'image/jpeg',
         'cache-control': 'private, no-store',
         'x-content-type-options': 'nosniff',
       },

@@ -29,6 +29,13 @@
       "when": 1790779164873,
       "tag": "0003_far_kat_farrell",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1791607131276,
+      "tag": "0004_third_swordsman",
+      "breakpoints": true
     }
   ]
 }
