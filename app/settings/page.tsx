@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AppShell } from '@/components/AppShell';
 import { useAmbientAudio, type SoundScene } from '@/components/audio/AmbientAudioProvider';
 import { clearAllDecisions } from '@/lib/client-api';
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { useRouter } from 'next/navigation';
 
 const scenes: Array<{ id: SoundScene; title: string; note: string }> = [

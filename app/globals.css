@@ -461,3 +461,14 @@ button:disabled { cursor: not-allowed; opacity: .48; }
     transition-duration: .01ms !important;
   }
 }
+
+/* Multiple options and a distinct background area. */
+.add-option { margin: 20px 14px; }
+.remove-option { display: block; margin: 0 14px 8px auto; }
+.decision-background { display: grid; gap: 12px; margin: 8px 14px 0; padding: 22px 0 6px; border-top: 1px dashed var(--line); }
+.decision-background > span { display: flex; justify-content: space-between; }
+.decision-background textarea { width: 100%; min-height: 120px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: rgba(255,255,255,.35); color: var(--ink); font: inherit; line-height: 1.6; }
+.decision-background small { font-size: 11px; color: var(--muted); }
+.ritual-orbit { flex-wrap: wrap; gap: 18px; }
+.alternative-choices { margin-top: 24px; }
+.card-photo-pair { flex-wrap: wrap; }

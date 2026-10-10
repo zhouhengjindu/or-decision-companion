@@ -68,6 +68,21 @@ describe('private decision ownership with real SQLite queries', () => {
     expect(await getDecisionImageKey(bob.id, 'bob', 0)).toContain('users/bob/');
   });
 
+  it('round-trips all options, background, third choice and third image', async () => {
+    const record = (await createDecision('alice', { ...payload,
+      options: ['Rice', 'Noodles', 'Soup'], images: [null, null, payload.imageA!],
+      imageA: null, context: 'Budget: 20\nOnly 30 minutes', recommendationIndex: 2, finalChoiceIndex: 2,
+    }))!;
+    expect(record.options).toEqual(['Rice', 'Noodles', 'Soup']);
+    expect(record.context).toBe('Budget: 20\nOnly 30 minutes');
+    expect(record.recommendation).toBe('Soup');
+    expect(record.finalChoice).toBe('Soup');
+    expect(record.images?.[2]).toContain('/images/2');
+    expect(Array.from((await getDecisionImage(record.id, 'alice', 2))!)).toEqual([255, 216, 255, 217]);
+    expect(await getDecisionImage(record.id, 'bob', 2)).toBeNull();
+    expect((await exportDecisions('alice'))[0].options).toEqual(record.options);
+  });
+
   it('clears one account and its images while preserving the other account', async () => {
     await createDecision('alice', payload);
     const bob = (await createDecision('bob', payload))!;

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { useEffect, useState } from 'react';
 import { AppShell } from '@/components/AppShell';
 import { fetchDecisions } from '@/lib/client-api';
@@ -26,7 +26,7 @@ export default function InsightsPage() {
       <section className="page-heading insight-heading">
         <p className="eyebrow"><span /> Personal decision model</p>
         <h1>A portrait in choices</h1>
-        <p>Nothing here is guessed. Every line comes from decisions saved on this computer.</p>
+        <p>Nothing here is guessed. Every line comes from decisions saved in your account.</p>
       </section>
 
       {loading ? <div className="loading-page" role="status"><i /><span>Finding the pattern…</span></div> : error ? (

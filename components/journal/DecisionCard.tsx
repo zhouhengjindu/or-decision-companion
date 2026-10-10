@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { useState } from 'react';
 import { downloadDecisionCard } from '@/lib/decision-card';
 import type { DecisionRecord } from '@/lib/types';
@@ -14,10 +14,9 @@ export function DecisionCard({ record, featured = false, exportable = false }: {
         <span>{date.toLocaleDateString('en', { month: 'short', day: 'numeric' })}</span>
         <span>{record.mode} Or</span>
       </div>
-      {(record.imageA || record.imageB) && (
+      {(record.images ?? [record.imageA, record.imageB]).some(Boolean) && (
         <div className="card-photo-pair" aria-label="Decision photos">
-          {record.imageA ? <img src={record.imageA} alt={record.optionA} /> : <span />}
-          {record.imageB ? <img src={record.imageB} alt={record.optionB} /> : <span />}
+          {(record.images ?? [record.imageA, record.imageB]).map((image, index) => image ? <img key={index} src={image} alt={(record.options ?? [record.optionA, record.optionB])[index]} /> : null)}
         </div>
       )}
       <p className="journal-question">{record.question}</p>

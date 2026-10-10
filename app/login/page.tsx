@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { useEffect, useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 

@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import Link from '@/components/PageLink';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AppShell } from '@/components/AppShell';
 import { DecisionCard } from '@/components/journal/DecisionCard';
@@ -16,7 +16,6 @@ const outcomes: Array<{ value: OutcomeRating; label: string; note: string; satis
 
 export default function DecisionDetailPage() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   const [record, setRecord] = useState<DecisionRecord | null>(null);
   const [rating, setRating] = useState<OutcomeRating | null>(null);
   const [reflection, setReflection] = useState('');
@@ -45,7 +44,7 @@ export default function DecisionDetailPage() {
     if (!record) return;
     if (!confirmDelete) { setConfirmDelete(true); return; }
     setSaving(true);
-    try { await removeDecision(record.id); router.push('/diary'); }
+    try { await removeDecision(record.id); window.location.assign('/diary'); }
     catch (caught) { setError(caught instanceof Error ? caught.message : 'The entry could not be deleted.'); setSaving(false); }
   }
 
@@ -76,6 +75,8 @@ export default function DecisionDetailPage() {
             {record.outcome && !error && <p className="saved-outcome">✓ Outcome saved. This will shape similar decisions.</p>}
             <button className="choose-button wide-button" type="button" disabled={saving} onClick={() => void submitOutcome()}>{saving ? 'Saving…' : record.outcome ? 'Update outcome' : 'Save what happened'} <span>→</span></button>
             <div className="decision-evidence">
+              <div><span>All options</span><p>{(record.options ?? [record.optionA, record.optionB]).join(" · ")}</p></div>
+              {record.context && <div><span>Decision background</span><p style={{ whiteSpace: "pre-wrap" }}>{record.context}</p></div>}
               <div><span>Or recommended</span><strong>{record.recommendation}</strong></div>
               <div><span>You chose</span><strong>{record.finalChoice}</strong></div>
               <div><span>Why</span><p>{record.reason}</p></div>

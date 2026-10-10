@@ -109,3 +109,24 @@ function record(overrides: Partial<DecisionRecord> = {}): DecisionRecord {
     ...overrides,
   };
 }
+
+describe('multiple options and background', () => {
+  const input = { optionA: 'Tea', optionB: 'Coffee', options: ['Tea', 'Coffee', 'Water'], context: 'A drink', preferredMode: 'think' as const };
+  it('includes every option in questions and can recommend the third option', () => {
+    const classification = classifyDecision(input);
+    for (const question of generateClarifyingQuestions(input, classification)) {
+      expect(question.choices).toContainEqual({ label: 'Water', value: 'C' });
+    }
+    const result = recommendDecision({ ...input, classification, answers: { desire: 'C', regret: 'C' }, history: [] });
+    expect(result.chosenIndex).toBe(2);
+    expect(result.choice).toBe('Water');
+    expect(result.tradeoff).toContain('Tea');
+    expect(result.tradeoff).toContain('Coffee');
+  });
+  it('classifies background and later options, with repeatable results', () => {
+    expect(classifyDecision({ ...input, preferredMode: 'auto', context: 'Considering a career move' }).mode).toBe('deep');
+    expect(classifyDecision({ ...input, preferredMode: 'auto', options: ['Tea', 'Coffee', 'Buy a house'] }).mode).toBe('deep');
+    const context = { ...input, classification: classifyDecision(input), answers: {}, history: [] };
+    expect(recommendDecision(context)).toEqual(recommendDecision(context));
+  });
+});

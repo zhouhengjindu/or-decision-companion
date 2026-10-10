@@ -56,7 +56,7 @@ pnpm build
 ```
 
 - Evaluation：20 个可追溯样本，逐项保留真实输入、history seeds、完整输出、断言与错误；当前 20 / 20 通过。报告由 runner 自动生成，不手填结果。
-- 单元测试：45 条，其中 32 个标准决策分类场景；覆盖 decision engine、历史 outcome 修正、insights 与两账户数据/图片隔离。
+- 单元测试：48 条，其中 32 个标准决策分类场景；覆盖 decision engine、历史 outcome 修正、insights 与两账户数据/图片隔离。
 - E2E：桌面 10 条旅程 + 移动端 11 条旅程，覆盖 Fast、Think、Accept、Override、输入拦截、Diary、Outcome、历史影响、PNG Card、图片、Ambient 偏好、Voice fallback 与移动端主操作。
 - Playwright 默认复用本机 Google Chrome；当前 macOS 环境不支持下载 Playwright 自带的 Chromium，因此配置使用稳定版 Chrome channel。
 
@@ -109,3 +109,7 @@ references/          source inventory
 - 自定义域名需用户已有可管理的 Cloudflare 域名；没有域名时使用 `workers.dev`。
 
 完整的产品故事见 [Or Product Book](docs/OR_PRODUCT_BOOK.md)，可追溯证据见 [Evaluation Report](evaluation/report.md)。当前状态与后续优先级见 [STATUS.md](STATUS.md)。产品定义、架构和重要取舍分别见 [PRD.md](PRD.md)、[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) 与 [docs/DECISIONS.md](docs/DECISIONS.md)。
+
+## 多选项与背景
+
+默认两个选项，可添加到 10 个并移除多余项；每项最多 500 字，独立背景框最多 2,000 字。追问、推荐、手动改选、私人图片、日记及导出均保留完整选项。已有 A/B 记录继续兼容。多选项推荐使用本地确定性规则与追问/历史信号，无偏好时仅作可重复的平局选择；背景用于分类与记录，不进行外部模型语义分析。站内链接使用原生文档导航，避免 beta 客户端路由失效。

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { AppShell } from '@/components/AppShell';
 
 export default function PrivacyPage() {

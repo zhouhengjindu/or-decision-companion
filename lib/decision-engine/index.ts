@@ -32,8 +32,12 @@ const irreversibleKeywords = [
   'offer', 'career', 'resign', 'quit', 'marry', 'break up', 'house', 'mortgage', 'surgery', 'degree', 'university', 'move city', 'investment',
   '离职', '职业', '结婚', '分手', '买房', '手术', '退学', '搬家', '投资', '读博',
 ];
+export function decisionOptions(input: Pick<DecisionInput, 'options' | 'optionA' | 'optionB'>) {
+  return input.options ?? [input.optionA, input.optionB];
+}
+
 function normalized(input: DecisionInput) {
-  return `${input.optionA} ${input.optionB} ${input.context ?? ''}`.trim().toLowerCase();
+  return `${decisionOptions(input).join(' ')} ${input.context ?? ''}`.trim().toLowerCase();
 }
 
 function containsAny(text: string, words: string[]) {
@@ -104,8 +108,7 @@ export function generateClarifyingQuestions(
       id: 'desire',
       prompt: 'If guilt disappeared for a moment, which one would you actually want?',
       choices: [
-        { label: input.optionA, value: 'A' },
-        { label: input.optionB, value: 'B' },
+        ...decisionOptions(input).map((label, index) => ({ label, value: String.fromCharCode(65 + index) })),
         { label: 'Honestly, neither', value: 'neutral' },
       ],
     },
@@ -113,8 +116,7 @@ export function generateClarifyingQuestions(
       id: 'regret',
       prompt: 'Tomorrow morning, which choice would you be more likely to regret missing?',
       choices: [
-        { label: input.optionA, value: 'A' },
-        { label: input.optionB, value: 'B' },
+        ...decisionOptions(input).map((label, index) => ({ label, value: String.fromCharCode(65 + index) })),
         { label: 'About the same', value: 'neutral' },
       ],
     },
@@ -126,8 +128,7 @@ export function generateClarifyingQuestions(
         id: 'future',
         prompt: 'Six months from now, which option better fits the person you want to become?',
         choices: [
-          { label: input.optionA, value: 'A' },
-          { label: input.optionB, value: 'B' },
+          ...decisionOptions(input).map((label, index) => ({ label, value: String.fromCharCode(65 + index) })),
           { label: 'Still unclear', value: 'neutral' },
         ],
       },
@@ -135,8 +136,7 @@ export function generateClarifyingQuestions(
         id: 'recovery',
         prompt: 'If it goes badly, which choice is easier to recover from?',
         choices: [
-          { label: input.optionA, value: 'A' },
-          { label: input.optionB, value: 'B' },
+          ...decisionOptions(input).map((label, index) => ({ label, value: String.fromCharCode(65 + index) })),
           { label: 'Equally recoverable', value: 'neutral' },
         ],
       },
@@ -147,14 +147,14 @@ export function generateClarifyingQuestions(
 }
 
 function historyEffect(input: DecisionInput, history: DecisionRecord[]) {
-  const current = `${input.optionA} ${input.optionB} ${input.context ?? ''}`;
+  const current = `${decisionOptions(input).join(' ')} ${input.context ?? ''}`;
   let score = 0;
   let strongest: DecisionRecord | undefined;
   let strongestSimilarity = 0;
 
   history.forEach((record) => {
     if (!record.outcome) return;
-    const recordText = `${record.optionA} ${record.optionB} ${record.context}`;
+    const recordText = `${decisionOptions(record).join(' ')} ${record.context}`;
     const relatedness = similarity(current, recordText);
     if (relatedness < 0.16) return;
 
@@ -173,7 +173,41 @@ function historyEffect(input: DecisionInput, history: DecisionRecord[]) {
   return { score: Math.max(-0.42, Math.min(0.42, score)), strongest };
 }
 
+function recommendMultiple(context: RecommendationContext): Recommendation {
+  const options = decisionOptions(context);
+  const scores = options.map((option) => (stableUnit(`${option}|${context.context ?? ''}`) - .5) * .18);
+  Object.values(context.answers).forEach((answer) => {
+    const index = answer.charCodeAt(0) - 65;
+    if (answer.length === 1 && index >= 0 && index < options.length) scores[index] += .22;
+  });
+  let strongest: DecisionRecord | undefined;
+  let strongestSimilarity = 0;
+  context.history.forEach((record) => {
+    if (!record.outcome) return;
+    const relatedness = similarity(`${options.join(' ')} ${context.context ?? ''}`, `${decisionOptions(record).join(' ')} ${record.context}`);
+    if (relatedness < .16) return;
+    const matches = options.map((option) => similarity(record.finalChoice, option));
+    const best = Math.max(...matches);
+    if (!best || matches.filter((match) => match === best).length !== 1) return;
+    const weight = record.outcome.rating === 'loved' ? .24 : record.outcome.rating === 'regretted' ? -.28 : .06;
+    scores[matches.indexOf(best)] += weight * Math.min(1, relatedness * 2.8);
+    if (relatedness > strongestSimilarity) { strongest = record; strongestSimilarity = relatedness; }
+  });
+  const ranked = scores.map((score, index) => ({ score, index })).sort((a, b) => b.score - a.score || a.index - b.index);
+  const chosenIndex = ranked[0].index;
+  const hasAnswers = Object.values(context.answers).some((answer) => /^[A-Z]$/.test(answer));
+  return {
+    chosenIndex, choice: options[chosenIndex],
+    confidence: Math.round(Math.min(88, 56 + Math.max(0, ranked[0].score - ranked[1].score) * 40)),
+    reason: hasAnswers ? 'Your answers give this option the strongest signal among the possibilities.' : 'There is no clear preference signal yet. This is a repeatable tie-breaker to help you move forward.',
+    tradeoff: `Choosing ${options[chosenIndex]} means setting aside ${options.filter((_, index) => index !== chosenIndex).join(', ')} for now.`,
+    regretEstimate: context.classification.reversible ? 'You can revisit this choice if it does not work out.' : 'This has lasting consequences. Check the assumptions before committing.',
+    memoryNote: strongest ? `A related outcome from ${new Date(strongest.createdAt).toLocaleDateString('en')} influenced the ranking.` : undefined,
+  };
+}
+
 export function recommendDecision(context: RecommendationContext): Recommendation {
+  if (decisionOptions(context).length > 2) return recommendMultiple(context);
   const { optionA, optionB, classification, answers, history } = context;
   const textA = optionA.toLowerCase();
   const textB = optionB.toLowerCase();

@@ -17,11 +17,19 @@ export async function POST(request: Request) {
   if (response || !user) return response;
   try {
     const payload = await request.json() as CreateDecisionPayload;
-    if (typeof payload.optionA !== 'string' || typeof payload.optionB !== 'string' || !payload.optionA.trim() || !payload.optionB.trim()) {
-      return NextResponse.json({ error: 'Two options are required.' }, { status: 400 });
+    const options = payload.options ?? [payload.optionA, payload.optionB];
+    if (!Array.isArray(options) || options.length < 2 || options.length > 10 || options.some((option) => typeof option !== 'string' || !option.trim() || option.length > 500)) {
+      return NextResponse.json({ error: 'Provide between 2 and 10 non-empty options, each under 500 characters.' }, { status: 400 });
+    }
+    if (new Set(options.map((option) => option.trim().toLowerCase())).size !== options.length) {
+      return NextResponse.json({ error: 'Make each option distinct.' }, { status: 400 });
+    }
+    payload.optionA = options[0]; payload.optionB = options[1];
+    if (payload.images !== undefined && (!Array.isArray(payload.images) || payload.images.length !== options.length || payload.images.some((image) => image !== null && (typeof image !== 'string' || image.length > 2_000_000 || !image.startsWith('data:image/jpeg;base64,'))))) {
+      return NextResponse.json({ error: 'Provide one compressed JPEG or null per option.' }, { status: 400 });
     }
     if (payload.optionA.length > 500 || payload.optionB.length > 500 || (payload.context?.length ?? 0) > 2000 ||
-      (payload.reflection?.length ?? 0) > 2000 || payload.question?.length > 1200 || payload.reason?.length > 2000 ||
+      (payload.reflection?.length ?? 0) > 2000 || payload.question?.length > 6000 || payload.reason?.length > 2000 ||
       payload.tradeoff?.length > 2000 || payload.regretEstimate?.length > 2000 ||
       (typeof payload.imageA === 'string' && payload.imageA.length > 2_000_000) ||
       (typeof payload.imageB === 'string' && payload.imageB.length > 2_000_000)) {
@@ -29,7 +37,7 @@ export async function POST(request: Request) {
     }
     if (!['fast', 'think', 'deep'].includes(payload.mode) ||
       !['daily', 'food', 'social', 'study', 'work', 'purchase', 'travel', 'career', 'wellbeing'].includes(payload.category) ||
-      ![0, 1].includes(payload.recommendationIndex) || ![0, 1].includes(payload.finalChoiceIndex) ||
+      (!Number.isInteger(payload.recommendationIndex) || payload.recommendationIndex < 0 || payload.recommendationIndex >= options.length) || (!Number.isInteger(payload.finalChoiceIndex) || payload.finalChoiceIndex < 0 || payload.finalChoiceIndex >= options.length) ||
       typeof payload.reversible !== 'boolean' || typeof payload.accepted !== 'boolean' ||
       !Number.isInteger(payload.confidence) || payload.confidence < 0 || payload.confidence > 100 ||
       !Number.isInteger(payload.durationSeconds) || payload.durationSeconds < 0 || payload.durationSeconds > 86400 ||
@@ -44,7 +52,7 @@ export async function POST(request: Request) {
     if ((payload.imageA && !payload.imageA.startsWith('data:image/jpeg;base64,')) || (payload.imageB && !payload.imageB.startsWith('data:image/jpeg;base64,'))) {
       return NextResponse.json({ error: 'Images must use the compressed JPEG format.' }, { status: 400 });
     }
-    const decision = await createDecision(user.id, { ...payload, optionA: payload.optionA.trim(), optionB: payload.optionB.trim() });
+    const decision = await createDecision(user.id, { ...payload, optionA: payload.optionA.trim(), optionB: payload.optionB.trim(), options: options.map((option) => option.trim()) });
     return NextResponse.json({ decision }, { status: 201 });
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('Each image')) {

@@ -9,8 +9,9 @@ export async function GET(request: Request, context: RouteContext) {
   if (response || !user) return response;
   try {
     const { id, side } = await context.params;
-    if (side !== 'a' && side !== 'b') return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
-    const image = await getDecisionImage(id, user.id, side === 'a' ? 0 : 1);
+    const position = side === 'a' ? 0 : side === 'b' ? 1 : /^\d+$/.test(side) ? Number(side) : -1;
+    if (!Number.isInteger(position) || position < 0 || position >= 10) return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
+    const image = await getDecisionImage(id, user.id, position);
     if (!image) return NextResponse.json({ error: 'Image not found.' }, { status: 404 });
     return new Response(image, {
       headers: {

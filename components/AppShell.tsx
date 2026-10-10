@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { usePathname } from 'next/navigation';
 import { useAmbientAudio } from '@/components/audio/AmbientAudioProvider';
 import { useEffect, useState, type ReactNode } from 'react';

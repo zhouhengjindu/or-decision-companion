@@ -75,6 +75,7 @@ export async function ensureSchema() {
 interface DecisionRow {
   id: string; question: string; context: string; mode: DecisionMode; category: DecisionCategory;
   reversible: number; duration_seconds: number; mood: string; created_at: string;
+  options_json: string;
   option_a: string; option_b: string; image_a: string | null; image_b: string | null;
   recommendation_index: number; confidence: number; reason: string; tradeoff: string; regret_estimate: string;
   final_choice_index: number; accepted: number; reflection: string | null; outcome_rating: OutcomeRating | null;
@@ -84,6 +85,8 @@ interface DecisionRow {
 
 const decisionSelect = `
   SELECT d.id, d.question, d.context, d.mode, d.category, d.reversible, d.duration_seconds, d.mood, d.created_at,
+    (SELECT json_group_array(json_object('label', label, 'imageKey', image_key)) FROM
+      (SELECT label, image_key FROM options WHERE decision_id = d.id ORDER BY position)) AS options_json,
     oa.label AS option_a, ob.label AS option_b, oa.image_key AS image_a, ob.image_key AS image_b,
     r.option_position AS recommendation_index, r.confidence, r.reason, r.tradeoff, r.regret_estimate,
     c.option_position AS final_choice_index, c.accepted,
@@ -99,12 +102,16 @@ const decisionSelect = `
 `;
 
 function mapRow(row: DecisionRow): DecisionRecord {
-  const recommendationIndex = (row.recommendation_index === 1 ? 1 : 0) as 0 | 1;
-  const finalChoiceIndex = (row.final_choice_index === 1 ? 1 : 0) as 0 | 1;
+  const storedOptions = JSON.parse(row.options_json) as Array<{ label: string; imageKey: string | null }>;
+  const options = storedOptions.map((option) => option.label);
+  const images = storedOptions.map((option, index) => option.imageKey ? `/api/decisions/${row.id}/images/${index}` : null);
+  const recommendationIndex = row.recommendation_index;
+  const finalChoiceIndex = row.final_choice_index;
   return {
     id: row.id,
     question: row.question,
     context: row.context,
+    options, images,
     optionA: row.option_a,
     optionB: row.option_b,
     imageA: row.image_a ? `/api/decisions/${row.id}/images/a` : null,
@@ -113,13 +120,13 @@ function mapRow(row: DecisionRow): DecisionRecord {
     category: row.category,
     reversible: Boolean(row.reversible),
     recommendationIndex,
-    recommendation: recommendationIndex === 0 ? row.option_a : row.option_b,
+    recommendation: options[recommendationIndex],
     confidence: row.confidence,
     reason: row.reason,
     tradeoff: row.tradeoff,
     regretEstimate: row.regret_estimate,
     finalChoiceIndex,
-    finalChoice: finalChoiceIndex === 0 ? row.option_a : row.option_b,
+    finalChoice: options[finalChoiceIndex],
     accepted: Boolean(row.accepted),
     durationSeconds: row.duration_seconds,
     mood: row.mood,
@@ -149,9 +156,9 @@ export async function getDecision(id: string, userId: string) {
 }
 
 export interface CreateDecisionPayload {
-  question: string; context?: string; optionA: string; optionB: string; imageA?: string | null; imageB?: string | null;
-  mode: DecisionMode; category: DecisionCategory; reversible: boolean; recommendationIndex: 0 | 1;
-  confidence: number; reason: string; tradeoff: string; regretEstimate: string; finalChoiceIndex: 0 | 1;
+  question: string; context?: string; optionA: string; optionB: string; imageA?: string | null; imageB?: string | null; options?: string[]; images?: Array<string | null>;
+  mode: DecisionMode; category: DecisionCategory; reversible: boolean; recommendationIndex: number;
+  confidence: number; reason: string; tradeoff: string; regretEstimate: string; finalChoiceIndex: number;
   accepted: boolean; durationSeconds: number; mood?: string; reflection: string;
 }
 
@@ -172,22 +179,21 @@ export async function createDecision(userId: string, payload: CreateDecisionPayl
   if ((ownedCount?.count ?? 0) >= 1000) throw new Error('Your account has reached the 1,000 decision limit.');
   const decisionId = crypto.randomUUID();
   const now = new Date().toISOString();
-  const images = [decodeDecisionImage(payload.imageA), decodeDecisionImage(payload.imageB)];
+  const labels = payload.options ?? [payload.optionA, payload.optionB];
+  const images = labels.map((_, index) => decodeDecisionImage(payload.images ? payload.images[index] : (index === 0 ? payload.imageA : index === 1 ? payload.imageB : null)));
   const currentImageBytes = await database.prepare(`SELECT COALESCE(SUM(o.image_size), 0) AS size
     FROM options o JOIN decisions d ON d.id = o.decision_id WHERE d.user_id = ?`).bind(userId).first<{ size: number }>();
   const imageBytes = images.reduce((sum, image) => sum + (image?.byteLength ?? 0), 0);
   if ((currentImageBytes?.size ?? 0) + imageBytes > 25_000_000) throw new Error('Your account has reached the 25 MB image storage limit.');
-  const imageKeys = images.map((image, index) => image ? `users/${encodeURIComponent(userId)}/decisions/${decisionId}/${index === 0 ? 'a' : 'b'}.jpg` : null);
+  const imageKeys = images.map((image, index) => image ? `users/${encodeURIComponent(userId)}/decisions/${decisionId}/${index}.jpg` : null);
   await database.batch([
     database.prepare(`INSERT INTO decisions
       (id, user_id, question, context, mode, category, reversible, duration_seconds, mood, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .bind(decisionId, userId, payload.question, payload.context ?? '', payload.mode, payload.category,
         payload.reversible ? 1 : 0, payload.durationSeconds, payload.mood ?? 'clear', now),
-    database.prepare('INSERT INTO options (id, decision_id, position, label, image_key, image_size) VALUES (?, ?, 0, ?, ?, ?)')
-      .bind(crypto.randomUUID(), decisionId, payload.optionA, imageKeys[0], images[0]?.byteLength ?? 0),
-    database.prepare('INSERT INTO options (id, decision_id, position, label, image_key, image_size) VALUES (?, ?, 1, ?, ?, ?)')
-      .bind(crypto.randomUUID(), decisionId, payload.optionB, imageKeys[1], images[1]?.byteLength ?? 0),
+    ...labels.map((label, index) => database.prepare('INSERT INTO options (id, decision_id, position, label, image_key, image_size) VALUES (?, ?, ?, ?, ?, ?)')
+      .bind(crypto.randomUUID(), decisionId, index, label, imageKeys[index], images[index]?.byteLength ?? 0)),
     database.prepare(`INSERT INTO recommendations
       (id, decision_id, option_position, confidence, reason, tradeoff, regret_estimate) VALUES (?, ?, ?, ?, ?, ?, ?)`)
       .bind(crypto.randomUUID(), decisionId, payload.recommendationIndex, payload.confidence, payload.reason, payload.tradeoff, payload.regretEstimate),
@@ -202,7 +208,7 @@ export async function createDecision(userId: string, payload: CreateDecisionPayl
   return getDecision(decisionId, userId);
 }
 
-export async function getDecisionImageKey(id: string, userId: string, position: 0 | 1) {
+export async function getDecisionImageKey(id: string, userId: string, position: number) {
   await ensureSchema();
   const row = await db().prepare(`SELECT o.image_key AS imageKey FROM options o
     JOIN decisions d ON d.id = o.decision_id WHERE d.id = ? AND d.user_id = ? AND o.position = ?`)
@@ -210,7 +216,7 @@ export async function getDecisionImageKey(id: string, userId: string, position: 
   return row?.imageKey ?? null;
 }
 
-export async function getDecisionImage(id: string, userId: string, position: 0 | 1) {
+export async function getDecisionImage(id: string, userId: string, position: number) {
   await ensureSchema();
   const row = await db().prepare(`SELECT i.data FROM decision_images i
     JOIN options o ON o.image_key = i.image_key JOIN decisions d ON d.id = o.decision_id

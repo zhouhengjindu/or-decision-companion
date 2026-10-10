@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/PageLink';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { mockAI } from '@/lib/ai/mock-provider';
@@ -52,13 +52,15 @@ async function imageToDataUrl(file: File) {
 
 export function DecisionExperience() {
   const [phase, setPhase] = useState<Phase>('input');
-  const [optionA, setOptionA] = useState('');
-  const [optionB, setOptionB] = useState('');
+  const [options, setOptions] = useState(['', '']);
+  const [images, setImages] = useState<Array<string | null>>([null, null]);
+  const [showAlternatives, setShowAlternatives] = useState(false);
+  const optionA = options[0];
+  const optionB = options[1];
+  const setOptionA = (value: string) => setOptions((items) => items.map((item, index) => index === 0 ? value : item));
   const [context, setContext] = useState('');
   const [mode, setMode] = useState<ModePreference>('auto');
   const [mood, setMood] = useState('torn');
-  const [imageA, setImageA] = useState<string | null>(null);
-  const [imageB, setImageB] = useState<string | null>(null);
   const [classification, setClassification] = useState<DecisionClassification | null>(null);
   const [questions, setQuestions] = useState<ClarifyingQuestion[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -83,16 +85,15 @@ export function DecisionExperience() {
     });
   }, []);
 
-  const resolvedInput = { optionA: optionA.trim(), optionB: optionB.trim(), context: context.trim(), preferredMode: mode };
+  const resolvedInput = { options: options.map((option) => option.trim()), optionA: optionA.trim(), optionB: optionB.trim(), context: context.trim(), preferredMode: mode };
 
-  function parseNaturalLanguage() {
-    if (optionB.trim()) return resolvedInput;
-    const parts = optionA.split(/\s+(?:or|OR|或者|还是)\s+/).map((part) => part.trim()).filter(Boolean);
+  function parseNaturalLanguage(input = resolvedInput) {
+    if (input.options.length !== 2 || input.optionB.trim()) return input;
+    const parts = input.optionA.split(/\s+(?:or|OR|或者|还是)\s+/).map((part) => part.trim()).filter(Boolean);
     if (parts.length === 2) {
-      setOptionA(parts[0]); setOptionB(parts[1]);
-      return { ...resolvedInput, optionA: parts[0], optionB: parts[1] };
+      return { ...input, options: parts, optionA: parts[0], optionB: parts[1] };
     }
-    return resolvedInput;
+    return input;
   }
 
   async function runRitual(nextClassification: DecisionClassification, nextAnswers: Record<string, string>, input = resolvedInput) {
@@ -107,21 +108,20 @@ export function DecisionExperience() {
     setPhase('result');
   }
 
-  async function beginDecision(submitted?: { optionA: string; optionB: string; context: string }) {
+  async function beginDecision(submitted?: { options: string[]; context: string }) {
     setError('');
     setNotice('');
-    const input = submitted
-      ? { ...submitted, optionA: submitted.optionA.trim(), optionB: submitted.optionB.trim(), context: submitted.context.trim(), preferredMode: mode }
-      : parseNaturalLanguage();
-    setOptionA(input.optionA);
-    setOptionB(input.optionB);
+    const input = parseNaturalLanguage(submitted
+      ? { options: submitted.options.map((option) => option.trim()), optionA: submitted.options[0].trim(), optionB: submitted.options[1].trim(), context: submitted.context.trim(), preferredMode: mode }
+      : resolvedInput);
+    setOptions(input.options);
     setContext(input.context);
-    if (!input.optionA || !input.optionB) {
-      setError('Give Or two possibilities — one for A and one for B.');
+    if (input.options.some((option) => !option)) {
+      setError('Fill each option, or remove the ones you do not need.');
       return;
     }
-    if (input.optionA.toLowerCase() === input.optionB.toLowerCase()) {
-      setError('These two options look the same. Make each possibility distinct.');
+    if (new Set(input.options.map((option) => option.toLowerCase())).size !== input.options.length) {
+      setError('These options look the same. Make each possibility distinct.');
       return;
     }
     const nextClassification = await mockAI.classifyDecision(input);
@@ -143,19 +143,19 @@ export function DecisionExperience() {
     else await runRitual(classification, nextAnswers);
   }
 
-  async function choose(finalChoiceIndex: 0 | 1) {
+  async function choose(finalChoiceIndex: number) {
     if (!classification || !recommendation) return;
     setSaving(true);
     setError('');
     const accepted = finalChoiceIndex === recommendation.chosenIndex;
-    const finalChoice = finalChoiceIndex === 0 ? optionA : optionB;
+    const finalChoice = options[finalChoiceIndex];
     const finishedAt = Date.now();
     const beganAt = startedAt.current ?? finishedAt;
     let pendingPayload: CreateDecisionPayload | null = null;
     try {
       const reflection = await mockAI.generateReflection({ finalChoice, accepted, mode: classification.mode, category: classification.category });
       pendingPayload = {
-        question: `${optionA} or ${optionB}?`, context, optionA, optionB, imageA, imageB,
+        question: `${options.join(' or ')}?`, context, optionA, optionB, options, images,
         mode: classification.mode, category: classification.category, reversible: classification.reversible,
         recommendationIndex: recommendation.chosenIndex, confidence: recommendation.confidence, reason: recommendation.reason,
         tradeoff: recommendation.tradeoff, regretEstimate: recommendation.regretEstimate, finalChoiceIndex, accepted,
@@ -180,7 +180,7 @@ export function DecisionExperience() {
   }
 
   function reset() {
-    setPhase('input'); setOptionA(''); setOptionB(''); setContext(''); setImageA(null); setImageB(null);
+    setPhase('input'); setOptions(['', '']); setImages([null, null]); setContext(''); setShowAlternatives(false);
     setClassification(null); setQuestions([]); setAnswers({}); setRecommendation(null); setSavedDecision(null);
     setShowWhy(false); setError(''); setNotice(''); setMood('torn'); startedAt.current = Date.now();
   }
@@ -212,11 +212,11 @@ export function DecisionExperience() {
     recognition.start();
   }
 
-  async function loadPhoto(file: File | undefined, side: 'A' | 'B') {
+  async function loadPhoto(file: File | undefined, index: number) {
     if (!file) return;
     try {
       const value = await imageToDataUrl(file);
-      if (side === 'A') setImageA(value); else setImageB(value);
+      setImages((items) => items.map((image, position) => position === index ? value : image));
     } catch (caught) { setError(caught instanceof Error ? caught.message : 'That photo could not be opened.'); }
   }
 
@@ -237,20 +237,35 @@ export function DecisionExperience() {
           <motion.div key="input" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .32 }}>
             <p className="eyebrow"><span /> A little space between maybe and done</p>
             <h1>What are you deciding?</h1>
-            <p className="intro">Give Or two possibilities. You can stop carrying both.</p>
+            <p className="intro">Give Or your possibilities, then add what matters to you.</p>
 
             <form className="decision-paper" onSubmit={(event) => {
               event.preventDefault();
               const data = new FormData(event.currentTarget);
-              void beginDecision({ optionA: String(data.get('optionA') ?? ''), optionB: String(data.get('optionB') ?? ''), context: String(data.get('context') ?? '') });
+              void beginDecision({ options: data.getAll('options').map(String), context: String(data.get('context') ?? '') });
             }}>
-              <OptionInput side="A" value={optionA} setValue={setOptionA} image={imageA} removeImage={() => setImageA(null)} loadPhoto={(file) => void loadPhoto(file, 'A')} placeholder="Stay home tonight" />
-              <div className="or-divider" aria-hidden="true"><span />or<span /></div>
-              <OptionInput side="B" value={optionB} setValue={setOptionB} image={imageB} removeImage={() => setImageB(null)} loadPhoto={(file) => void loadPhoto(file, 'B')} placeholder="Go out with friends" />
+              {options.map((option, index) => (
+                <div key={index}>
+                  {index > 0 && <div className="or-divider" aria-hidden="true"><span />or<span /></div>}
+                  <OptionInput side={String.fromCharCode(65 + index)} value={option}
+                    setValue={(value) => setOptions((items) => items.map((item, position) => position === index ? value : item))}
+                    image={images[index]} removeImage={() => setImages((items) => items.map((image, position) => position === index ? null : image))}
+                    loadPhoto={(file) => void loadPhoto(file, index)} placeholder={index === 0 ? 'Stay home tonight' : index === 1 ? 'Go out with friends' : 'Another possibility'} />
+                  {options.length > 2 && <button type="button" className="text-button remove-option" aria-label={`Remove option ${String.fromCharCode(65 + index)}`} onClick={() => {
+                    setOptions((items) => items.filter((_, position) => position !== index));
+                    setImages((items) => items.filter((_, position) => position !== index));
+                  }}>Remove option</button>}
+                </div>
+              ))}
+              <button type="button" className="secondary-button add-option" disabled={options.length >= 10} onClick={() => {
+                setOptions((items) => [...items, '']); setImages((items) => [...items, null]);
+              }}>＋ Add option {options.length >= 10 && '(maximum 10)'}</button>
 
-              <label className="context-field">
-                <span>Anything Or should know?</span>
-                <input name="context" value={context} onChange={(event) => setContext(event.target.value)} placeholder="Optional — energy, deadline, budget…" />
+              <label className="context-field decision-background">
+                <span>Decision background <small>Optional</small></span>
+                <textarea name="context" value={context} onChange={(event) => setContext(event.target.value)} rows={4} maxLength={2000}
+                  placeholder="What is the situation? Add your goals, constraints, budget, deadline, or concerns beyond the options." />
+                <small>{context.length} / 2000 · Used for decision classification and saved with your entry.</small>
               </label>
 
               <div className="paper-footer final-footer">
@@ -269,7 +284,7 @@ export function DecisionExperience() {
                   const form = event.currentTarget.closest('form');
                   if (!form) return;
                   const data = new FormData(form);
-                  void beginDecision({ optionA: String(data.get('optionA') ?? ''), optionB: String(data.get('optionB') ?? ''), context: String(data.get('context') ?? '') });
+                  void beginDecision({ options: data.getAll('options').map(String), context: String(data.get('context') ?? '') });
                 }}>Choose for me <span aria-hidden="true">→</span></button>
               </div>
               <div className="mood-row" aria-label="Current mood">
@@ -300,7 +315,7 @@ export function DecisionExperience() {
 
         {phase === 'ritual' && (
           <motion.div className="ritual-stage" key="ritual" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="ritual-orbit" aria-hidden="true"><span>{optionA}</span><i>or</i><span>{optionB}</span></div>
+            <div className="ritual-orbit" aria-hidden="true">{options.map((option, index) => <span key={index}>{option}</span>)}</div>
             <p>{ritualWords[ritualWord]}</p>
             <small>Or is choosing</small>
           </motion.div>
@@ -323,10 +338,13 @@ export function DecisionExperience() {
             </AnimatePresence>
             <div className="result-actions">
               <button className="choose-button" type="button" disabled={saving} onClick={() => void choose(recommendation.chosenIndex)}>{saving ? 'Saving…' : "I'll do it"}<span>→</span></button>
-              <button className="secondary-button" type="button" disabled={saving} onClick={() => void choose(recommendation.chosenIndex === 0 ? 1 : 0)}>Not this time</button>
+              <button className="secondary-button" type="button" disabled={saving} onClick={() => options.length === 2 ? void choose(recommendation.chosenIndex === 0 ? 1 : 0) : setShowAlternatives((value) => !value)}>Not this time</button>
               <button className="text-button" type="button" onClick={() => setShowWhy((value) => !value)}>{showWhy ? 'Less' : 'Why?'}</button>
               <button className="text-button" type="button" onClick={hearOr}>Hear Or</button>
             </div>
+            {showAlternatives && <div className="question-choices alternative-choices" aria-label="Choose another option">
+              {options.map((option, index) => index !== recommendation.chosenIndex && <button key={index} type="button" disabled={saving} onClick={() => void choose(index)}><span>{String.fromCharCode(65 + index)}</span>{option}<i>→</i></button>)}
+            </div>}
             <Feedback error={error} notice={notice} />
           </motion.div>
         )}
@@ -349,14 +367,14 @@ export function DecisionExperience() {
 }
 
 function OptionInput({ side, value, setValue, image, removeImage, loadPhoto, placeholder }: {
-  side: 'A' | 'B'; value: string; setValue: (value: string) => void; image: string | null;
+  side: string; value: string; setValue: (value: string) => void; image: string | null;
   removeImage: () => void; loadPhoto: (file?: File) => void; placeholder: string;
 }) {
   return (
     <div className={`option-field ${image ? 'has-image' : ''}`}>
       <span className={`option-index ${side === 'B' ? 'option-b' : ''}`}>{side}</span>
       {image && <div className="photo-preview"><img src={image} alt="" /><button type="button" onClick={removeImage} aria-label={`Remove photo from option ${side}`}>×</button></div>}
-      <label className="option-text"><span className="sr-only">Option {side}</span><input name={`option${side}`} aria-label={`Option ${side}`} value={value} onChange={(event) => setValue(event.target.value)} placeholder={placeholder} /></label>
+      <label className="option-text"><span className="sr-only">Option {side}</span><input name="options" aria-label={`Option ${side}`} maxLength={500} value={value} onChange={(event) => setValue(event.target.value)} placeholder={placeholder} /></label>
       <label className="photo-button">＋ photo<input type="file" accept="image/*" onChange={(event) => { loadPhoto(event.target.files?.[0]); event.target.value = ''; }} /></label>
     </div>
   );

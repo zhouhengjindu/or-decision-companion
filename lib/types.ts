@@ -16,6 +16,7 @@ export type OutcomeRating = 'loved' | 'fine' | 'regretted';
 export interface DecisionInput {
   optionA: string;
   optionB: string;
+  options?: string[];
   context?: string;
   preferredMode?: ModePreference;
 }
@@ -48,18 +49,20 @@ export interface DecisionRecord {
   context: string;
   optionA: string;
   optionB: string;
+  options?: string[];
   imageA?: string | null;
   imageB?: string | null;
+  images?: Array<string | null>;
   mode: DecisionMode;
   category: DecisionCategory;
   reversible: boolean;
-  recommendationIndex: 0 | 1;
+  recommendationIndex: number;
   recommendation: string;
   confidence: number;
   reason: string;
   tradeoff: string;
   regretEstimate: string;
-  finalChoiceIndex: 0 | 1;
+  finalChoiceIndex: number;
   finalChoice: string;
   accepted: boolean;
   durationSeconds: number;
@@ -76,7 +79,7 @@ export interface RecommendationContext extends DecisionInput {
 }
 
 export interface Recommendation {
-  chosenIndex: 0 | 1;
+  chosenIndex: number;
   choice: string;
   confidence: number;
   reason: string;
