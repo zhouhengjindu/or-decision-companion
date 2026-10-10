@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "or-decision-companion",
-      "database_id": "00000000-0000-4000-8000-000000000001",
+      "database_id": "5a7cbcb7-2647-482a-9f29-ffdea41e339f",
       "migrations_dir": "drizzle"
     }
   ],

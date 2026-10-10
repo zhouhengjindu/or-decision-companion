@@ -48,3 +48,5 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 2026-10-09 续跑：已按用户授权创建公开仓库 `zhouhengjindu/or-decision-companion`，连接器已确认公开可见且当前为空。GitHub CLI 已完成设备验证码输入，停在最终权限授权页；代码上传尚未完成。Cloudflare Wrangler OAuth 在旧版和临时新版、默认和缩减权限两种情况下均返回授权失败，CLI 尚未认证。生产 D1/R2、GitHub OAuth App、运行密钥和 Actions secrets 均待配置，网站尚未上线。下一步从 GitHub CLI 权限确认继续，并排查 Cloudflare OAuth；详细证据见 `STATUS.md`。
 
 2026-10-10：GitHub CLI 已获用户授权，代码及完整历史已上传公开仓库，首次 GitHub CI 通过。Deploy 因缺少 Cloudflare secrets 在迁移前停止，尚未上线。命令行连接需显式使用系统已有本地代理；Cloudflare 账户后台已恢复登录，设备授权仍有错误，继续检查 API Token 连接方式。详细进度以 `STATUS.md` 的最新补记为准。
+
+2026-10-10 云端配置：Cloudflare Token 已验证、GitHub Actions 两项部署 secrets 已保存；全新远程 D1 已创建并完成 4 个 migration（业务记录 0 条），免费账户子域 `zhouhengjindu.workers.dev` 已注册。R2 尚需网页启用，OAuth App 表单待最终创建授权；Worker 尚未部署。新增独立内存 SQLite 两账户隔离测试，45/45 tests 和 typecheck 通过。继续时读取 `STATUS.md` 最新补记；本机 D1 仍不得迁移或清空。

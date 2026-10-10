@@ -97,3 +97,14 @@
 - 代码和完整提交历史已上传到公开 GitHub 仓库，`main` 已跟踪远程分支；首次云端 CI 成功，类型检查、lint、单元测试和生产构建通过。
 - 首次 Deploy 在远程迁移前因尚未配置 `CLOUDFLARE_API_TOKEN` 终止；没有执行数据库迁移或发布。
 - Cloudflare 账户后台已恢复登录；Wrangler 设备授权仍遇到授权失败或页面空白，正在检查 API Token 连接方式。生产 D1/R2、OAuth App 和部署 secrets 尚未创建，网站仍未上线。
+- 已通过页面核实 `Or portfolio deployment` API Token 创建成功且为 Active；创建前摘要仅限当前账户，权限为 Workers Scripts/D1/Workers R2 Storage Edit、Account Settings Read。控制工具未取得一次性 Token 内容，当前已返回凭据列表，等待确认是否保存到本机文件；不得把 Token 发到聊天或写入仓库。
+
+### 2026-10-10 云端资源配置补记
+
+- 用户已将 Cloudflare Token 保存到被 Git 忽略的本机文件，权限为 `600`；Wrangler 已成功连接指定账户。`CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID` 已存入目标仓库的 Actions Secrets，并只读核实了名称。
+- 已新建远程 D1 `or-decision-companion`（APAC），ID `5a7cbcb7-2647-482a-9f29-ffdea41e339f`，已替换配置中的占位值。4 个 migration 全部成功，生产 decisions 为 0；未接触本机 D1。
+- 已注册账户的免费 Workers 子域 `zhouhengjindu.workers.dev`；计划应用地址为 `https://or-decision-companion.zhouhengjindu.workers.dev`，目前尚未发布，不能视为可访问网站。
+- R2 API 返回 `10042 Please enable R2 through the Cloudflare Dashboard`，已打开启用页，等待确认其付款信息/订阅要求；未开通订阅或创建 bucket。
+- GitHub OAuth App 表单已填好名称、主页与唯一回调 `/api/auth/callback/github`，未启用通配符。等待用户确认注册及生成 Client Secret；Worker 运行 secrets 还未上传。
+- 新增使用独立内存 SQLite 执行实际业务 SQL 的两账户隔离测试，覆盖列表/导出/读取/结果修改/删除/图片归属/单账户清空。45/45 tests、typecheck 通过；lint 0 error / 3 条既有图片 warning。这不是线上 OAuth 或真实 R2 验收，后两项仍待完成。
+- 下一步：确认 R2 启用条件与 OAuth App 创建授权，配置生产和隔离验收资源及运行 secrets，发布并验证登录回调和图片读写后再宣布上线。
