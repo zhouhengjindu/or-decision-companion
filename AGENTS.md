@@ -47,4 +47,4 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 
 2026-10-09 续跑：已按用户授权创建公开仓库 `zhouhengjindu/or-decision-companion`，连接器已确认公开可见且当前为空。GitHub CLI 已完成设备验证码输入，停在最终权限授权页；代码上传尚未完成。Cloudflare Wrangler OAuth 在旧版和临时新版、默认和缩减权限两种情况下均返回授权失败，CLI 尚未认证。生产 D1/R2、GitHub OAuth App、运行密钥和 Actions secrets 均待配置，网站尚未上线。下一步从 GitHub CLI 权限确认继续，并排查 Cloudflare OAuth；详细证据见 `STATUS.md`。
 
-2026-10-10：用户已确认 GitHub CLI 授权并完成 Mac 通行密钥验证，CLI 登录成功。命令行连接 GitHub 需显式使用系统已有本地代理；已改用 Cloudflare 设备授权流程继续排查。详细进度以 `STATUS.md` 的最新补记为准。
+2026-10-10：GitHub CLI 已获用户授权，代码及完整历史已上传公开仓库，首次 GitHub CI 通过。Deploy 因缺少 Cloudflare secrets 在迁移前停止，尚未上线。命令行连接需显式使用系统已有本地代理；Cloudflare 账户后台已恢复登录，设备授权仍有错误，继续检查 API Token 连接方式。详细进度以 `STATUS.md` 的最新补记为准。

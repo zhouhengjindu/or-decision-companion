@@ -94,4 +94,6 @@
 
 - 用户已确认 GitHub CLI 权限，并在 Mac 上完成通行密钥验证；CLI 已成功登录 `zhouhengjindu`。
 - 已定位命令行网络超时原因：系统浏览器使用现有本地代理，CLI 未继承。此次 GitHub/Cloudflare 命令显式使用系统已有代理，不修改系统代理设置。
-- Cloudflare 改用新版 Wrangler 的设备授权流程，申请账户/用户只读、Workers 和 D1 写入权限；等待网页验证。
+- 代码和完整提交历史已上传到公开 GitHub 仓库，`main` 已跟踪远程分支；首次云端 CI 成功，类型检查、lint、单元测试和生产构建通过。
+- 首次 Deploy 在远程迁移前因尚未配置 `CLOUDFLARE_API_TOKEN` 终止；没有执行数据库迁移或发布。
+- Cloudflare 账户后台已恢复登录；Wrangler 设备授权仍遇到授权失败或页面空白，正在检查 API Token 连接方式。生产 D1/R2、OAuth App 和部署 secrets 尚未创建，网站仍未上线。
