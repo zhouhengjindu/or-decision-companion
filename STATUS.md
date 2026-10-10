@@ -81,3 +81,17 @@
 本地 Git 已初始化，`main` 的初始提交为 `98d2516`；提交包含 93 个文件，工作区干净，`origin` 指向 `https://github.com/zhouhengjindu/or-decision-companion.git`。未包含本地 D1、真实密钥或 `outputs/`。
 
 账号侧核验：GitHub 连接器已认证为 `zhouhengjindu`，但目标仓库返回 404；本机 Chrome 需要手动解锁才能继续浏览器操作。Cloudflare Wrangler 登录曾启动，但授权回调超时，`wrangler whoami` 仍显示未认证。需解锁后重新完成 Cloudflare CLI 登录，并创建 GitHub 仓库；再新建 D1/R2、替换真实数据库 ID、创建 GitHub OAuth App、配置 Worker 运行密钥和 GitHub Actions 部署 secrets。当前没有自定义域名，因此计划先用 `workers.dev`。
+
+## 2026-10-09 公开部署续跑
+
+- 已创建并通过 GitHub 连接器核实公开仓库：`https://github.com/zhouhengjindu/or-decision-companion`。仓库目前为空，尚未上传代码。
+- 本机 Git 尚无 GitHub 上传凭据，首次 push 在发送代码前因缺少凭据终止。已从 GitHub 官方发布页下载并校验 GitHub CLI，工具位于被忽略的 `work/2026-10-09-deployment-tools/`。
+- GitHub CLI 网页验证已进入最终权限确认页，等待用户确认授权；页面列出仓库（公开和私有）、Actions 工作流、Gist 读写和组织只读权限。
+- Cloudflare 网页账户已登录，但 Wrangler 仍未认证。旧版和临时运行的新版 Wrangler OAuth 均返回 `Application authorization failed`；缩减到账户/用户只读、Workers 和 D1 写入权限后仍未成功。
+- 尚未新建生产 D1/R2、配置 OAuth App 或发布网站；未接触本机 D1。下一步先完成 GitHub CLI 授权并上传代码，再解决 Cloudflare 授权及生产资源配置。
+
+## 2026-10-10 授权与上传续跑
+
+- 用户已确认 GitHub CLI 权限，并在 Mac 上完成通行密钥验证；CLI 已成功登录 `zhouhengjindu`。
+- 已定位命令行网络超时原因：系统浏览器使用现有本地代理，CLI 未继承。此次 GitHub/Cloudflare 命令显式使用系统已有代理，不修改系统代理设置。
+- Cloudflare 改用新版 Wrangler 的设备授权流程，申请账户/用户只读、Workers 和 D1 写入权限；等待网页验证。

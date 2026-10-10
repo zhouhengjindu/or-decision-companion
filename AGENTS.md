@@ -44,3 +44,7 @@ Node.js 22.13+；锁文件以 pnpm 为准，npm 命令也可启动。
 2026-09-30：本地体验已完成公开部署改造；43/43 unit tests 和 production build 通过，lint 0 error / 3 个既有图片 warning。迁移 SQL 已在独立内存 SQLite 执行验证，未接触本机 D1。生产上线还需：Cloudflare 身份验证及新建 D1/R2、GitHub OAuth 凭据、GitHub 公开仓库与 Actions secrets。
 
 下一步完成账户凭据与 Cloudflare 环境配置，验证两账户数据隔离、OAuth 回调和 R2 图片读写，再推送公开 GitHub 仓库并发布 `workers.dev`。后续优先做真实用户测试、语义相似 memory 与非表格化 Deep criteria；不接入远程 AI API。
+
+2026-10-09 续跑：已按用户授权创建公开仓库 `zhouhengjindu/or-decision-companion`，连接器已确认公开可见且当前为空。GitHub CLI 已完成设备验证码输入，停在最终权限授权页；代码上传尚未完成。Cloudflare Wrangler OAuth 在旧版和临时新版、默认和缩减权限两种情况下均返回授权失败，CLI 尚未认证。生产 D1/R2、GitHub OAuth App、运行密钥和 Actions secrets 均待配置，网站尚未上线。下一步从 GitHub CLI 权限确认继续，并排查 Cloudflare OAuth；详细证据见 `STATUS.md`。
+
+2026-10-10：用户已确认 GitHub CLI 授权并完成 Mac 通行密钥验证，CLI 登录成功。命令行连接 GitHub 需显式使用系统已有本地代理；已改用 Cloudflare 设备授权流程继续排查。详细进度以 `STATUS.md` 的最新补记为准。
